@@ -83,8 +83,18 @@ public class GithubService2 implements GitService{
             newRepo.setOwner(oldRepo.getOwnerName());
             newRepo.setUrl(oldRepo.getUrl().toString());
             newRepo.setBranches(oldRepo.getBranches().keySet());
-            newRepo.setCollaborators(oldRepo.getCollaboratorNames());
             newRepo.setCreatedAt(oldRepo.getCreatedAt().toString());
+            
+
+            for(GHUser collaborator : oldRepo.getCollaborators()){
+                Usuario usuario = new Usuario();
+                usuario.setId((int) collaborator.getId());
+                usuario.setName(collaborator.getName());
+                usuario.setUsername(collaborator.getLogin());
+                newRepo.addCollaborator(usuario);
+            }
+            
+            
             repositoryModels.add(newRepo);
         }
         return repositoryModels;

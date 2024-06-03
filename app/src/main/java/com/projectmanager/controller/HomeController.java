@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import com.projectmanager.entities.Usuario;
 import com.projectmanager.model.UsuarioModel;
 import com.projectmanager.service.GitService;
-import com.projectmanager.service.GithubAPIService;
+
 import com.projectmanager.service.UsuarioService;
 
 @Controller

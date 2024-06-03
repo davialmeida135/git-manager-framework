@@ -79,7 +79,7 @@ public class GithubAPIService {
                 newRepo.setOwner(oldRepo.getOwnerName());
                 newRepo.setUrl(oldRepo.getUrl().toString());
                 newRepo.setBranches(oldRepo.getBranches().keySet());
-                newRepo.setCollaborators(oldRepo.getCollaboratorNames());
+                //newRepo.setCollaborators(oldRepo.getCollaboratorNames());
                 
             }
             //System.out.println();

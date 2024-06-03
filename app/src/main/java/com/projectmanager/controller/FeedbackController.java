@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import com.projectmanager.entities.Feedback;
+import com.projectmanager.entities.Usuario;
 import com.projectmanager.forms.FeedbackForm;
 import com.projectmanager.model.RepositoryModel;
 import com.projectmanager.service.FeedbackService;
@@ -37,7 +38,7 @@ public class FeedbackController {
             GHMyself user = githubService.getUser(accessToken);
             Iterable<Feedback> feedbacks = feedbackService.getFeedbacksUsuarioProjeto(accessToken,repoName);
             RepositoryModel repositoryModel = githubService.getRepositoryModel(user, repoName);
-            Set<String> collaborators = repositoryModel.getCollaborators();
+            Set<Usuario> collaborators = repositoryModel.getCollaborators();
             model.addAttribute("feedbacks", feedbacks);
             model.addAttribute("collaborators", collaborators);
         } catch (IOException e) {

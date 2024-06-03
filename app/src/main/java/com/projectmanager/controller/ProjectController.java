@@ -20,7 +20,7 @@ import org.springframework.ui.Model; // Importe a classe Model
 import com.projectmanager.model.RepositoryModel;
 import com.projectmanager.service.ColaboradorService;
 import com.projectmanager.service.GitService;
-import com.projectmanager.service.GithubAPIService;
+
 import com.projectmanager.service.ProjetoService;
 import com.projectmanager.service.TarefaService;
 
