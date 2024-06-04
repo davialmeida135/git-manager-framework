@@ -14,7 +14,7 @@ public class SpringSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.csrf().disable().authorizeRequests()
-        .requestMatchers("/github/**","/home/**","/repository/**","/authenticated/**","/user/**") // Paginas  que precisam de autenticação
+        .requestMatchers("/home/**","/repository/**","/authenticated/**","/user/**") // Paginas  que precisam de autenticação
         .authenticated()
         .requestMatchers("/**").permitAll() //Paginas que não precisam de autenticação
         .and()
