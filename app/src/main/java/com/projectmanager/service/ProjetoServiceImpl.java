@@ -1,7 +1,7 @@
 package com.projectmanager.service;
 
 import java.io.IOException;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -11,8 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import org.kohsuke.github.GHMyself;
-import org.kohsuke.github.GHRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -59,7 +58,7 @@ public class ProjetoServiceImpl implements ProjetoService {
             projeto.setData_inicio(repo.getCreatedAt().toString());
             
 
-            gitService.saveIssuesAsTarefas(repo,tarefaService);
+            gitService.saveIssuesAsTarefas(accessToken,repoName, tarefaService);
 
             return projetoRepository.save(projeto);
 

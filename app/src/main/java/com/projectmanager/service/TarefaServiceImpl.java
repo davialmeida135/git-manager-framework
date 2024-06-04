@@ -1,19 +1,16 @@
 package com.projectmanager.service;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
+
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.kohsuke.github.GHIssue;
-import org.kohsuke.github.GHMyself;
-import org.kohsuke.github.GHPersonSet;
-import org.kohsuke.github.GHRepository;
-import org.kohsuke.github.GHUser;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +19,9 @@ import com.projectmanager.entities.Tarefa;
 import com.projectmanager.entities.Usuario;
 import com.projectmanager.exceptions.BusinessException;
 import com.projectmanager.forms.TarefaForm;
+import com.projectmanager.model.IssueModel;
+import com.projectmanager.model.RepositoryModel;
+import com.projectmanager.model.UsuarioModel;
 import com.projectmanager.repositories.TarefaRepository;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -40,7 +40,8 @@ public class TarefaServiceImpl implements TarefaService{
     @Autowired
     CronogramaService cronogramaService;
     @Autowired
-    GithubAPIService githubService;
+    @Qualifier("GithubService2")
+    private GitService gitService;
 
     @Override
     public Iterable<Tarefa> findAll() {
@@ -61,10 +62,10 @@ public class TarefaServiceImpl implements TarefaService{
         newTarefa.setTitulo(tarefaForm.getTitulo());
         newTarefa.setDescricao(tarefaForm.getDescricao());
         newTarefa.setPrazo(tarefaForm.getPrazo());
-             
-        GHMyself loggedUser = githubService.getUser(accessToken); // Objeto do usuario
-        githubService.validateUser(loggedUser, user_id);
-        GHRepository repo = githubService.getRepository(loggedUser, repoName);
+        
+        UsuarioModel loggedUser = gitService.getUsuarioModel(accessToken); // Objeto do usuario
+        gitService.validateUser(loggedUser, user_id);
+        RepositoryModel repo = gitService.getRepository(accessToken, repoName);
         newTarefa.setId_criador((int) loggedUser.getId());
         newTarefa.setId_projeto((int) repo.getId());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -75,8 +76,8 @@ public class TarefaServiceImpl implements TarefaService{
         }
         newTarefa = tarefaRepository.save(newTarefa);
         colaborador.setTarefa_id(newTarefa.getId());
-        for (GHUser user : repo.getCollaborators()) {
-            if(tarefaForm.getCollaborators().contains(user.getLogin())){
+        for (Usuario user : gitService.getRepositoryCollaborators(accessToken, repoName)) {
+            if(tarefaForm.getCollaborators().contains(user.getUsername())){
                 colaborador.setUsuario_id((int) user.getId());
                 colaboradorService.save(colaborador);
             };
@@ -86,24 +87,16 @@ public class TarefaServiceImpl implements TarefaService{
     }
     
     @Override
-    public Tarefa save(GHIssue issue, GHRepository repo) throws IOException{
+    public Tarefa save(IssueModel issue, int repoId){
         Tarefa newTarefa = new Tarefa();
-        newTarefa.setTitulo(issue.getTitle());
-        newTarefa.setDescricao(issue.getBody());
-        newTarefa.setId_criador((int)issue.getUser().getId());
-        newTarefa.setId_projeto((int) repo.getId());
-        newTarefa.setData_criacao(issue.getCreatedAt().toString());
-        newTarefa.setPrazo("1111-11-11");
+        newTarefa.setTitulo(issue.getTitulo());
+        newTarefa.setDescricao(issue.getDescricao());
+        newTarefa.setId_criador(issue.getId_criador());
+        newTarefa.setId_projeto(repoId);
+        newTarefa.setData_criacao(issue.getData_criacao());
+        newTarefa.setPrazo(issue.getPrazo());
 
         tarefaRepository.save(newTarefa);
-
-        Colaborador novoColaborador = new Colaborador();
-        novoColaborador.setTarefa_id(newTarefa.getId());
-        
-        for (GHUser collaborator : issue.getAssignees()) {   
-            novoColaborador.setUsuario_id((int) collaborator.getId());
-            colaboradorService.save(novoColaborador);      
-        }
     
         return newTarefa;
     }
@@ -129,7 +122,7 @@ public class TarefaServiceImpl implements TarefaService{
     }
 
     @Override
-    public Tarefa edit(TarefaForm tarefaForm, int tarefaId, GHRepository repo) {
+    public Tarefa edit(TarefaForm tarefaForm, int tarefaId, String repoName, String accessToken) {
 
         Tarefa tarefa = find(tarefaId);
 
@@ -145,18 +138,17 @@ public class TarefaServiceImpl implements TarefaService{
         Colaborador colaborador = new Colaborador();
         
         colaborador.setTarefa_id(tarefa.getId());
-        
+           
         try {
-            for (GHUser user : repo.getCollaborators()) {
-                if(tarefaForm.getCollaborators().contains(user.getLogin())){
+            for (Usuario user : gitService.getRepositoryCollaborators(accessToken, repoName)) {
+                if(tarefaForm.getCollaborators().contains(user.getUsername())){
                     colaborador.setUsuario_id((int) user.getId());
                     colaboradorService.save(colaborador);
                 };
             }
         } catch (IOException e) {
-            return tarefa;
+            e.printStackTrace();
         }
-
         return tarefa;
     }
 

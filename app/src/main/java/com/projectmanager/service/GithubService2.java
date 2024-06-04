@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
+import org.kohsuke.github.GHIssue;
+import org.kohsuke.github.GHIssueState;
 import org.kohsuke.github.GHMyself;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHUser;
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import com.projectmanager.entities.Usuario;
 import com.projectmanager.exceptions.BusinessException;
+import com.projectmanager.model.IssueModel;
 import com.projectmanager.model.RepositoryModel;
 import com.projectmanager.model.UsuarioModel;
 
@@ -58,7 +62,6 @@ public class GithubService2 implements GitService{
 
     @Override
     public RepositoryModel getRepository(String accessToken, String repoName) throws IOException {
-        GHMyself user = getGhMyself(accessToken);
         List<RepositoryModel> repositories = getRepositories(accessToken);
         for(RepositoryModel repo : repositories){
             if(repo.getName().equals(repoName)){
@@ -83,8 +86,9 @@ public class GithubService2 implements GitService{
             newRepo.setOwner(oldRepo.getOwnerName());
             newRepo.setUrl(oldRepo.getUrl().toString());
             newRepo.setBranches(oldRepo.getBranches().keySet());
-            newRepo.setCollaborators(oldRepo.getCollaboratorNames());
             newRepo.setCreatedAt(oldRepo.getCreatedAt().toString());
+            
+            
             repositoryModels.add(newRepo);
         }
         return repositoryModels;
@@ -115,9 +119,12 @@ public class GithubService2 implements GitService{
     }
 
     @Override
-    public void saveIssuesAsTarefas(RepositoryModel repo, TarefaService tarefaService) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'saveIssuesAsTarefas'");
+    public void saveIssuesAsTarefas(String accessToken, String repoName, TarefaService tarefaService) throws IOException{
+        Set<IssueModel> issues = getRepositoryIssues(accessToken,repoName);
+        RepositoryModel model = getRepository(accessToken, repoName);
+        for (IssueModel issue : issues) { 
+            tarefaService.save(issue,(int)model.getId());
+        }
     }
 
     @Override
@@ -142,7 +149,7 @@ public class GithubService2 implements GitService{
         }
     }
 
-    //TODO Não sei se é necessario
+    
     @Override
     public String getUserId(OAuth2AuthenticationToken authenticationToken,
             OAuth2AuthorizedClientService oauth2AuthorizedClientService) throws IOException{
@@ -168,5 +175,47 @@ public class GithubService2 implements GitService{
         }
         return true;
     }
-    
+
+    public Set<Usuario> getRepositoryCollaborators(String accessToken, String repoName) throws IOException {
+        GHMyself user = getGhMyself(accessToken);
+        Collection<GHRepository> repositories = user.getRepositories().values();
+        Set<Usuario> colaboradores = new java.util.HashSet<Usuario>();
+        for(GHRepository repo : repositories) {
+            if(repo.getName().equals(repoName)){
+                for(GHUser collaborator : repo.getCollaborators()){
+                    Usuario usuario = new Usuario();
+                    usuario.setId((int) collaborator.getId());
+                    usuario.setName(collaborator.getName());
+                    usuario.setUsername(collaborator.getLogin());
+                    colaboradores.add(usuario);
+                }
+                return colaboradores;
+            }
+        }
+        return colaboradores;
+    }
+
+    @Override
+    public Set<IssueModel> getRepositoryIssues(String accessToken, String repoName) throws IOException {
+        GHMyself user = getGhMyself(accessToken);
+        Collection<GHRepository> repositories = user.getRepositories().values();
+        Set<IssueModel> issues = new java.util.HashSet<IssueModel>();
+        for(GHRepository repo : repositories) {
+            if(repo.getName().equals(repoName)){
+                
+                for(GHIssue issue : repo.getIssues(GHIssueState.OPEN)){
+                    IssueModel issueModel = new IssueModel();
+                    issueModel.setTitulo(issue.getTitle());
+                    issueModel.setDescricao(issue.getBody());
+                    issueModel.setId_criador((int)issue.getUser().getId());
+                    issueModel.setId_projeto((int) repo.getId());
+                    issueModel.setData_criacao(issue.getCreatedAt().toString());
+                    issueModel.setPrazo("1111-11-11");
+                    issues.add(issueModel);
+                }
+                return issues;
+            }
+        }
+        return issues;
+    }   
 }
