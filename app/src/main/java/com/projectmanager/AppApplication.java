@@ -4,15 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-//import githubService.SpringBootApplication;
-//import org.springframework.security.oauth2.core.OAuth2AccessToken;
 
-import com.projectmanager.entities.Feedback;
-import com.projectmanager.entities.Tarefa;
+
+
 import com.projectmanager.service.FeedbackService;
-import com.projectmanager.service.TarefaService;
+
 
 @SpringBootApplication()
+
 public class AppApplication implements CommandLineRunner{
 
 	@Autowired

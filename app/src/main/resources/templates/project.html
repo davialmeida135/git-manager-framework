@@ -36,7 +36,9 @@
                 <p>Descrição: <span th:text="${repository.description}"></span></p>
                 <p>Dono: <span th:text="${repository.owner}"></span></p>
                 <p>Branches: <span th:text="${repository.branches}"></span></p>
-                <p>Colaboradores: <span th:text="${repository.collaborators}"></span></p>
+                <p>Colaboradores: <ul th:each="user : ${collaborators}">
+                    <li th:text="${user.username}"></li>
+                </ul></span></p>
             </div>
 
             <!-- <div class="detalhes_tarefas">
@@ -86,7 +88,7 @@
             <div style="color: #000000;" class="modal fade text-start col-md-8" id="modalNewTask" tabindex="-1"
                 aria-labelledby="modalNewTaskLabel" aria-hidden="true">
                 <div
-                    th:replace="~{fragments/modal_form_tarefa :: modal_form_tarefa(${repository}, ${user.id}, ${repo_name}, null, null)}">
+                    th:replace="~{fragments/modal_form_tarefa :: modal_form_tarefa(${repository}, ${user.id}, ${repo_name}, null, null, ${collaborators})}">
                 </div>
             </div>
         </main>

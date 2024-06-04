@@ -1,9 +1,6 @@
 package com.projectmanager.controller;
 
 import java.io.IOException;
-
-import org.kohsuke.github.GHMyself;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;

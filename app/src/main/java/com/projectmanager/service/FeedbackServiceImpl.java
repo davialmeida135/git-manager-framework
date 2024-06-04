@@ -4,13 +4,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.kohsuke.github.GHMyself;
-import org.kohsuke.github.GHRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.projectmanager.entities.Feedback;
+import com.projectmanager.entities.Usuario;
 import com.projectmanager.forms.FeedbackForm;
+import com.projectmanager.model.RepositoryModel;
 import com.projectmanager.repositories.FeedbackRepository;
 
 @Service("feedbackService")
@@ -19,7 +20,8 @@ public class FeedbackServiceImpl implements FeedbackService{
     @Autowired
     FeedbackRepository feedbackRepository;
     @Autowired
-    GithubAPIService githubService;
+    @Qualifier("GithubService2")
+    private GitService gitService; // Injete o serviço que obtém os repositórios do GitHub
 
     @Override
     public Iterable<Feedback> findAll() {
@@ -33,13 +35,13 @@ public class FeedbackServiceImpl implements FeedbackService{
 
     @Override
     public Feedback save(String repoName, String accessToken, FeedbackForm feedbackForm) throws IOException{
-        GHMyself user = githubService.getUser(accessToken);
-        GHRepository repo = githubService.getRepository(user, repoName);
-        Long colaboratorId = githubService.getCollaboratorId(feedbackForm.getCollaborators().get(0),repo);
+        Usuario user = gitService.getUsuario(accessToken);
+        RepositoryModel repo = gitService.getRepository(accessToken, repoName);
+        Long colaboratorId = gitService.getCollaboratorId(accessToken,feedbackForm.getCollaborators().get(0),repo);
         Feedback feedback = new Feedback();
         feedback.setComentario(feedbackForm.getMensagem());
         feedback.setDestinatario(colaboratorId.intValue());
-        feedback.setEscritor(user.getLogin());
+        feedback.setEscritor(user.getUsername());
         feedback.setProjeto(Math.toIntExact(repo.getId()));
 
         return feedbackRepository.save(feedback);
@@ -53,9 +55,9 @@ public class FeedbackServiceImpl implements FeedbackService{
     @Override
     public Collection<Feedback> getFeedbacksUsuarioProjeto(String accessToken, String repoName) throws IOException{
         ArrayList<Feedback> feedbacks = new ArrayList<>();
-        GHMyself user = githubService.getUser(accessToken);
+        Usuario user = gitService.getUsuario(accessToken);
         int userId = (int) user.getId();
-        GHRepository repo = githubService.getRepository( user,  repoName);
+        RepositoryModel repo = gitService.getRepository( accessToken,  repoName);
 
         for (Feedback feedback : findAll()) {
             if (feedback.getDestinatario() == userId && feedback.getProjeto() == (int) repo.getId()){
