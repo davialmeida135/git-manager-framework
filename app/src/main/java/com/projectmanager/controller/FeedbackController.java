@@ -19,6 +19,7 @@ import com.projectmanager.entities.Usuario;
 import com.projectmanager.forms.FeedbackForm;
 import com.projectmanager.service.FeedbackService;
 import com.projectmanager.service.GitService;
+import com.projectmanager.config.Global;
 
 
 @Controller
@@ -26,7 +27,7 @@ import com.projectmanager.service.GitService;
 public class FeedbackController {
 
     @Autowired
-    @Qualifier("GithubService2")
+    @Qualifier(Global.GitClass)
     private GitService gitService; // Injete o serviço que obtém os repositórios do GitHub4
     @Autowired
     private OAuth2AuthorizedClientService oauth2AuthorizedClientService;

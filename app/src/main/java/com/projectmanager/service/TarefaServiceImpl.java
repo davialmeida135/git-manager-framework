@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.projectmanager.config.Global;
 import com.projectmanager.entities.Colaborador;
 import com.projectmanager.entities.Tarefa;
 import com.projectmanager.entities.Usuario;
@@ -40,7 +41,7 @@ public class TarefaServiceImpl implements TarefaService{
     @Autowired
     CronogramaService cronogramaService;
     @Autowired
-    @Qualifier("GithubService2")
+    @Qualifier(Global.GitClass)
     private GitService gitService;
 
     @Override

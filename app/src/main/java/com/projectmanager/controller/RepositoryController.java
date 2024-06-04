@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.ui.Model; // Importe a classe Model
 
+import com.projectmanager.config.Global;
 import com.projectmanager.entities.Cronograma;
 import com.projectmanager.entities.ScheduledActivity;
 import com.projectmanager.entities.Tarefa;
@@ -42,7 +43,7 @@ import com.projectmanager.service.TarefaService;
 public class RepositoryController {
 
     @Autowired
-    @Qualifier("GithubService2")
+    @Qualifier(Global.GitClass)
     private GitService gitService; // Injete o serviço que obtém os repositórios do GitHub
 
     @Autowired

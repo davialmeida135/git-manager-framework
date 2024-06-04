@@ -25,8 +25,9 @@ import com.projectmanager.exceptions.BusinessException;
 import com.projectmanager.model.IssueModel;
 import com.projectmanager.model.RepositoryModel;
 import com.projectmanager.model.UsuarioModel;
+import com.projectmanager.config.Global;
 
-@Service("GithubService2")
+@Service(Global.GitClass)
 public class GithubService2 implements GitService{
 
     GHMyself getGhMyself(String accessToken) throws IOException {

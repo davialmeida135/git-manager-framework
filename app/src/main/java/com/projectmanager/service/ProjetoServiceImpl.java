@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.projectmanager.config.Global;
 import com.projectmanager.entities.Projeto;
 import com.projectmanager.model.RepositoryModel;
 import com.projectmanager.repositories.ProjetoRepository;
@@ -23,7 +24,7 @@ import com.projectmanager.repositories.ProjetoRepository;
 @Service("ProjetoService")
 public class ProjetoServiceImpl implements ProjetoService {
     @Autowired
-    @Qualifier("GithubService2")
+    @Qualifier(Global.GitClass)
     private GitService gitService; // Injete o serviço que obtém os repositórios do GitHub
 
     @Autowired
