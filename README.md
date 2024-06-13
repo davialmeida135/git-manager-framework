@@ -22,9 +22,10 @@ Demonstração de como usar a plataforma de gerenciamento de projetos.
 
 - Recomendação de tarefa
   - Será usado um Strategy
- 
+
+ #Sendo testado, talvez vire uma classe concreta e nao uma interface
 - Atributos customizados da tarefa
-  - Será usada uma interface chamada CustomAttribute com tipo flexível
+  - Será usada uma interface chamada CustomAttribute com tipo flexível 
   - Essa interface terá um atributo "nome" fixo para cada atributo
   - Terá um atributo "valor" do tipo especificado
   - Métodos getNome, get&setValor
