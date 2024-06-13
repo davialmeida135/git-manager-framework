@@ -34,12 +34,34 @@ Demonstração de como usar a plataforma de gerenciamento de projetos.
   - 
   - Classe Tarefa terá uma array de CustomAttributes
   - Método getCustomAttribute("name") retorna o valor do custom attribute com esse nome definido
- 
-  ```public class CustomAttribute<T> {
+  - On CustomAttribute.java
+  ```
+  public class CustomAttribute<T> {
     String getName();
     T getValue();
     void setValue(T value);
     String toJson();
     CustomAttribute<T> fromJson();
-}
+  }
+
+  
+  ```
+  - On Tarefa.java
+  ```
+    private List<CustomAttribute<?>> customAttributes = new ArrayList<>();
+
+    public void addCustomAttribute(CustomAttribute<?> attribute) {
+        this.customAttributes.add(attribute);
+    }
+
+    public void removeCustomAttribute(CustomAttribute<?> attribute) {
+        this.customAttributes.remove(attribute);
+    }
+
+    public CustomAttribute<?> getCustomAttribute(String name) {
+        return this.customAttributes.stream()
+                .filter(attr -> attr.getName().equals(name))
+                .findFirst()
+                .orElse(null);
+    }
   ```
