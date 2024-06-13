@@ -7,6 +7,7 @@ Projeto voltado para o gerenciamento eficiente de projetos de desenvolvimento de
 1. [Instalação](#instalação)
 2. [Uso](#uso)
 
+
 ## Instalação
 
 Instruções de instalação serão fornecidas aqui.
@@ -33,3 +34,12 @@ Demonstração de como usar a plataforma de gerenciamento de projetos.
   - 
   - Classe Tarefa terá uma array de CustomAttributes
   - Método getCustomAttribute("name") retorna o valor do custom attribute com esse nome definido
+ 
+  ```public class CustomAttribute<T> {
+    String getName();
+    T getValue();
+    void setValue(T value);
+    String toJson();
+    CustomAttribute<T> fromJson();
+}
+  ```
