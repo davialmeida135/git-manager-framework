@@ -34,6 +34,9 @@ public class ProjetoServiceImpl implements ProjetoService {
     @Autowired
     CronogramaService cronogramaService;
 
+    @Autowired
+    RecommendationStrategy recommendationStrategy;
+
     @Override
     public Iterable<Projeto> findAll() {
         return projetoRepository.findAll();
@@ -113,6 +116,11 @@ public class ProjetoServiceImpl implements ProjetoService {
                 (projeto1, projeto2) -> projeto2.getDataInicioDate().compareTo(projeto1.getDataInicioDate()));
 
         return orderedProjects;
+    }
+
+    //TODO TRANSFORMAR EM PONTO FLEXÍVEL
+    void setRecommendationStrategy(RecommendationStrategy strategy) {
+        this.recommendationStrategy = strategy;
     }
 
     @Override
