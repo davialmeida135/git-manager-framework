@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import com.projectmanager.config.Global;
 import com.projectmanager.entities.Colaborador;
 import com.projectmanager.entities.Tarefa;
+
 import com.projectmanager.entities.Usuario;
 import com.projectmanager.exceptions.BusinessException;
 import com.projectmanager.forms.TarefaForm;
@@ -28,8 +29,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-@Service("TarefaService")
-public abstract class TarefaServiceAbs implements TarefaService{
+public abstract class TarefaServiceAbs{
 
     @Autowired
     TarefaRepository tarefaRepository;
@@ -44,17 +44,18 @@ public abstract class TarefaServiceAbs implements TarefaService{
     @Qualifier(Global.GitClass)
     private GitService gitService;
 
-    @Override
-    public Iterable<Tarefa> findAll() {
+    public abstract Tarefa validadeCustomTarefa(Tarefa tarefa) throws BusinessException;
+    
+    public abstract Tarefa instantiateTarefa();
+    
+    public Iterable<? extends Tarefa> findAll() {
         return tarefaRepository.findAll();
     }
-
-    @Override
+ 
     public Tarefa find(int id) throws NoSuchElementException{
         return tarefaRepository.findById(id).get();
     }
 
-    @Override
     public Tarefa save(TarefaForm tarefaForm, String repoName, String accessToken, String user_id) 
     throws IOException,BusinessException,DateTimeParseException,PermissionDeniedDataAccessException {
         
@@ -75,7 +76,7 @@ public abstract class TarefaServiceAbs implements TarefaService{
         if (inputDate.isBefore(currentDate)) {
             throw new BusinessException("Não é possível selecionar um prazo anterior ao dia atual.");
         }
-        newTarefa = tarefaRepository.save(newTarefa);
+        newTarefa = tarefaRepository.save( newTarefa);
         colaborador.setTarefa_id(newTarefa.getId());
         for (Usuario user : gitService.getRepositoryCollaborators(accessToken, repoName)) {
             if(tarefaForm.getCollaborators().contains(user.getUsername())){
@@ -87,7 +88,7 @@ public abstract class TarefaServiceAbs implements TarefaService{
         return newTarefa;
     }
     
-    @Override
+    
     public Tarefa save(IssueModel issue, int repoId){
         Tarefa newTarefa = instantiateTarefa();
         newTarefa.setTitulo(issue.getTitulo());
@@ -102,14 +103,14 @@ public abstract class TarefaServiceAbs implements TarefaService{
         return newTarefa;
     }
 
-    @Override
+    
     public void delete(int id) {
         colaboradorService.deleteColaboradoresTarefa(id);
         comentarioService.deleteComentariosTarefa(id);
         tarefaRepository.deleteById(id);
     }
 
-    @Override
+    
     public Collection<Tarefa> getTaskByProject(int projetoid) {
         ArrayList<Tarefa> tarefas = new ArrayList<>();
         
@@ -122,7 +123,7 @@ public abstract class TarefaServiceAbs implements TarefaService{
         return tarefas;
     }
 
-    @Override
+    
     public Tarefa edit(TarefaForm tarefaForm, int tarefaId, String repoName, String accessToken) {
 
         Tarefa tarefa = find(tarefaId);
@@ -153,7 +154,7 @@ public abstract class TarefaServiceAbs implements TarefaService{
         return tarefa;
     }
 
-    @Override
+    
     public TarefaForm getFormTarefa(int id) {
         Tarefa tarefa = find(id);
 
@@ -188,16 +189,11 @@ public abstract class TarefaServiceAbs implements TarefaService{
         if(tarefa.getTitulo() == null || tarefa.getTitulo().isEmpty()){
             throw new BusinessException("O título da tarefa não pode ser vazio.");
         }
-        if(tarefa.getDescricao() == null || tarefa.getDescricao().isEmpty()){
-            throw new BusinessException("A descrição da tarefa não pode ser vazia.");
+        if(tarefa.getTitulo().length() < 4){
+            throw new BusinessException("O título da tarefa deve ter pelo menos 4 caracteres.");
         }
-        if(tarefa.getPrazo() == null || tarefa.getPrazo().isEmpty()){
-            throw new BusinessException("O prazo da tarefa não pode ser vazio.");
-        }
+
         return tarefa;
     }
     
-    public abstract Tarefa validadeCustomTarefa(Tarefa tarefa) throws BusinessException;
-    
-    public abstract Tarefa instantiateTarefa();
 }

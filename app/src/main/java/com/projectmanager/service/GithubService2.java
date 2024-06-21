@@ -120,7 +120,7 @@ public class GithubService2 implements GitService{
     }
 
     @Override
-    public void saveIssuesAsTarefas(String accessToken, String repoName, TarefaService tarefaService) throws IOException{
+    public void saveIssuesAsTarefas(String accessToken, String repoName, TarefaServiceAbs tarefaService) throws IOException{
         Set<IssueModel> issues = getRepositoryIssues(accessToken,repoName);
         RepositoryModel model = getRepository(accessToken, repoName);
         for (IssueModel issue : issues) { 

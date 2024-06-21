@@ -36,7 +36,7 @@ import com.projectmanager.service.ComentarioService;
 import com.projectmanager.service.GitService;
 
 import com.projectmanager.service.ProjetoService;
-import com.projectmanager.service.TarefaService;
+import com.projectmanager.service.TarefaServiceAbs;
 
 
 @Controller
@@ -51,7 +51,7 @@ public class TarefaController {
     private OAuth2AuthorizedClientService oauth2AuthorizedClientService;
 
     @Autowired
-    TarefaService tarefaService;
+    TarefaServiceAbs tarefaService;
 
     @Autowired
     ComentarioService comentarioService;

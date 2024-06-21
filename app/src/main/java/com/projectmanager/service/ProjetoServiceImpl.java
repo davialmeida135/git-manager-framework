@@ -30,12 +30,9 @@ public class ProjetoServiceImpl implements ProjetoService {
     @Autowired
     ProjetoRepository projetoRepository;
     @Autowired
-    TarefaService tarefaService;
+    TarefaServiceAbs tarefaService;
     @Autowired
     CronogramaService cronogramaService;
-
-    @Autowired
-    RecommendationStrategy recommendationStrategy;
 
     @Override
     public Iterable<Projeto> findAll() {
@@ -119,6 +116,7 @@ public class ProjetoServiceImpl implements ProjetoService {
     }
 
     //TODO TRANSFORMAR EM PONTO FLEXÍVEL
+    private RecommendationStrategy recommendationStrategy;
     void setRecommendationStrategy(RecommendationStrategy strategy) {
         this.recommendationStrategy = strategy;
     }

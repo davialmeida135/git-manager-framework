@@ -8,8 +8,11 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@MappedSuperclass
-public abstract class Tarefa extends ScheduledActivity{
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "tarefa_type", discriminatorType = DiscriminatorType.STRING)
+@Table(name = "tarefa")
+public class Tarefa extends ScheduledActivity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

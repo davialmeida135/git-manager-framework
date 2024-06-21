@@ -23,7 +23,7 @@ public interface GitService {
     Set<IssueModel> getRepositoryIssues(String accessToken, String repoName)throws IOException;
     Set<Usuario> getRepositoryCollaborators(String accessToken, String repoName) throws IOException;
 
-    void saveIssuesAsTarefas(String accessToken, String repoName, TarefaService tarefaService) throws IOException;
+    void saveIssuesAsTarefas(String accessToken, String repoName, TarefaServiceAbs tarefaService) throws IOException;
     String getAccessToken(OAuth2AuthenticationToken authenticationToken,
             OAuth2AuthorizedClientService oauth2AuthorizedClientService);
     String getUserId(OAuth2AuthenticationToken authenticationToken, OAuth2AuthorizedClientService oauth2AuthorizedClientService)throws IOException ;

@@ -36,7 +36,7 @@ import com.projectmanager.service.CronogramaService;
 import com.projectmanager.service.GitService;
 
 import com.projectmanager.service.ProjetoService;
-import com.projectmanager.service.TarefaService;
+import com.projectmanager.service.TarefaServiceAbs;
 
 @Controller
 @RequestMapping("/user/{user_id}/repositories")
@@ -52,7 +52,7 @@ public class RepositoryController {
     @Autowired
     ProjetoService projetoService;
     @Autowired
-    TarefaService tarefaService;
+    TarefaServiceAbs tarefaService;
     @Autowired
     CronogramaService cronogramaService;
     @Autowired

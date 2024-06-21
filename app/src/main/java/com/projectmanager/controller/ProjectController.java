@@ -21,7 +21,7 @@ import com.projectmanager.service.ColaboradorService;
 import com.projectmanager.service.GitService;
 
 import com.projectmanager.service.ProjetoService;
-import com.projectmanager.service.TarefaService;
+import com.projectmanager.service.TarefaServiceAbs;
 
 @Controller
 @RequestMapping("/user/{user_id}/projects")
@@ -38,7 +38,7 @@ public class ProjectController {
     ProjetoService projetoService;
 
     @Autowired
-    TarefaService tarefaService;
+    TarefaServiceAbs tarefaService;
 
     @Autowired
     ColaboradorService colaboradorService;
