@@ -19,49 +19,12 @@ Demonstração de como usar a plataforma de gerenciamento de projetos.
 ## Pontos Flexíveis
 
 - Plataforma Git
-  - Será usado um Strategy
+  - Temos uma interface chamada GitService que deve ser implementada.
 
 - Recomendação de tarefa
-  - Será usado um Strategy
+  - Será usado um Strategy chamado Recommendation Stategy que deve ser implementado e instanciado no ProjetoService
 
- #Sendo testado, talvez vire uma classe concreta e nao uma interface
-- Atributos customizados da tarefa
-  - Será usada uma interface chamada CustomAttribute com tipo flexível 
-  - Essa interface terá um atributo "nome" fixo para cada atributo
-  - Terá um atributo "valor" do tipo especificado
-  - Métodos getNome, get&setValor
-  - Métodos toJson, fromJson
-  - 
-  - Classe Tarefa terá uma array de CustomAttributes
-  - Método getCustomAttribute("name") retorna o valor do custom attribute com esse nome definido
-  - On CustomAttribute.java
-  ```
-  public class CustomAttribute<T> {
-    String getName();
-    T getValue();
-    void setValue(T value);
-    String toJson();
-    CustomAttribute<T> fromJson();
-  }
-
-  
-  ```
-  - On Tarefa.java
-  ```
-    private List<CustomAttribute<?>> customAttributes = new ArrayList<>();
-
-    public void addCustomAttribute(CustomAttribute<?> attribute) {
-        this.customAttributes.add(attribute);
-    }
-
-    public void removeCustomAttribute(CustomAttribute<?> attribute) {
-        this.customAttributes.remove(attribute);
-    }
-
-    public CustomAttribute<?> getCustomAttribute(String name) {
-        return this.customAttributes.stream()
-                .filter(attr -> attr.getName().equals(name))
-                .findFirst()
-                .orElse(null);
-    }
-  ```
+- Atributos flexíveis de tarefa:
+  - Temos uma classe concreta Tarefa que pode ser extendida para criação de novos atributos
+  - O banco de dados deve ser atualizado para condizer com os novos atributos
+  - A classe abstrata TarefaServiceAbs deve ser Estendida para implementar 3 métodos: Validação, Instanciação, Conversão de Formulário para Tarefa

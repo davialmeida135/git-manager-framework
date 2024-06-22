@@ -44,9 +44,12 @@ public abstract class TarefaServiceAbs{
     @Qualifier(Global.GitClass)
     private GitService gitService;
 
-    public abstract Tarefa validadeCustomTarefa(Tarefa tarefa) throws BusinessException;
+    public abstract Tarefa validateCustomTarefa(Tarefa tarefa) throws BusinessException;
     
     public abstract Tarefa instantiateTarefa();
+
+    public abstract Tarefa formToTarefa(TarefaForm tarefaForm, String repoName, String accessToken)
+    throws BusinessException, IOException;
     
     public Iterable<? extends Tarefa> findAll() {
         return tarefaRepository.findAll();
@@ -60,22 +63,8 @@ public abstract class TarefaServiceAbs{
     throws IOException,BusinessException,DateTimeParseException,PermissionDeniedDataAccessException {
         
         Colaborador colaborador = new Colaborador();
-        Tarefa newTarefa = instantiateTarefa();
-        newTarefa.setTitulo(tarefaForm.getTitulo());
-        newTarefa.setDescricao(tarefaForm.getDescricao());
-        newTarefa.setPrazo(tarefaForm.getPrazo());
-        
-        UsuarioModel loggedUser = gitService.getUsuarioModel(accessToken); // Objeto do usuario
-        gitService.validateUser(loggedUser, user_id);
-        RepositoryModel repo = gitService.getRepository(accessToken, repoName);
-        newTarefa.setId_criador((int) loggedUser.getId());
-        newTarefa.setId_projeto((int) repo.getId());
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate inputDate = LocalDate.parse(tarefaForm.getPrazo(), formatter);
-        LocalDate currentDate = LocalDate.now();
-        if (inputDate.isBefore(currentDate)) {
-            throw new BusinessException("Não é possível selecionar um prazo anterior ao dia atual.");
-        }
+        Tarefa newTarefa = formToTarefa(tarefaForm, repoName, accessToken);
+        validate(newTarefa);
         newTarefa = tarefaRepository.save( newTarefa);
         colaborador.setTarefa_id(newTarefa.getId());
         for (Usuario user : gitService.getRepositoryCollaborators(accessToken, repoName)) {
@@ -124,16 +113,14 @@ public abstract class TarefaServiceAbs{
     }
 
     
-    public Tarefa edit(TarefaForm tarefaForm, int tarefaId, String repoName, String accessToken) {
+    public Tarefa edit(TarefaForm tarefaForm, int tarefaId, String repoName, String accessToken) throws BusinessException, IOException {
 
-        Tarefa tarefa = find(tarefaId);
+        
 
         colaboradorService.deleteColaboradoresTarefa(tarefaId);
         tarefaRepository.deleteById(tarefaId);
 
-        tarefa.setTitulo(tarefaForm.getTitulo());
-        tarefa.setDescricao(tarefaForm.getDescricao());
-        tarefa.setPrazo(tarefaForm.getPrazo());
+        Tarefa tarefa = formToTarefa(tarefaForm, repoName, accessToken);
 
         tarefa = tarefaRepository.save(tarefa);
 
@@ -180,12 +167,12 @@ public abstract class TarefaServiceAbs{
     }
 
     public Tarefa validate(Tarefa tarefa) throws BusinessException {
-        validadeBaseTarefa(tarefa);
-        validadeCustomTarefa(tarefa);
+        validateBaseTarefa(tarefa);
+        validateCustomTarefa(tarefa);
         return tarefa;
     }
 
-    public Tarefa validadeBaseTarefa(Tarefa tarefa)throws BusinessException{
+    public Tarefa validateBaseTarefa(Tarefa tarefa)throws BusinessException{
         if(tarefa.getTitulo() == null || tarefa.getTitulo().isEmpty()){
             throw new BusinessException("O título da tarefa não pode ser vazio.");
         }

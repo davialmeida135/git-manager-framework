@@ -21,7 +21,6 @@ public class FeedbackServiceImpl implements FeedbackService{
     @Autowired
     FeedbackRepository feedbackRepository;
     @Autowired
-    @Qualifier(Global.GitClass)
     private GitService gitService; // Injete o serviço que obtém os repositórios do GitHub
 
     @Override
