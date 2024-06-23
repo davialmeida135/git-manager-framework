@@ -1,7 +1,7 @@
 package com.projectmanager.service;
 
 import java.io.IOException;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -11,12 +11,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import org.kohsuke.github.GHMyself;
-import org.kohsuke.github.GHRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.projectmanager.config.Global;
 import com.projectmanager.entities.Projeto;
 import com.projectmanager.model.RepositoryModel;
 import com.projectmanager.repositories.ProjetoRepository;
@@ -24,13 +24,13 @@ import com.projectmanager.repositories.ProjetoRepository;
 @Service("ProjetoService")
 public class ProjetoServiceImpl implements ProjetoService {
     @Autowired
-    @Qualifier("GithubService2")
+    @Qualifier(Global.GitClass)
     private GitService gitService; // Injete o serviço que obtém os repositórios do GitHub
 
     @Autowired
     ProjetoRepository projetoRepository;
     @Autowired
-    TarefaService tarefaService;
+    TarefaServiceAbs tarefaService;
     @Autowired
     CronogramaService cronogramaService;
 
@@ -59,7 +59,7 @@ public class ProjetoServiceImpl implements ProjetoService {
             projeto.setData_inicio(repo.getCreatedAt().toString());
             
 
-            gitService.saveIssuesAsTarefas(repo,tarefaService);
+            gitService.saveIssuesAsTarefas(accessToken,repoName, tarefaService);
 
             return projetoRepository.save(projeto);
 
@@ -115,6 +115,12 @@ public class ProjetoServiceImpl implements ProjetoService {
         return orderedProjects;
     }
 
+    //TODO TRANSFORMAR EM PONTO FLEXÍVEL
+    private RecommendationStrategy recommendationStrategy;
+    void setRecommendationStrategy(RecommendationStrategy strategy) {
+        this.recommendationStrategy = strategy;
+    }
+
     @Override
     public List<RepositoryModel> findTop3ByOrderByDataCriacaoDesc(Collection<RepositoryModel> repositories) {
         List<RepositoryModel> orderedProjects = (List<RepositoryModel>) findProjectByUserRepositories(orderByDate(),
@@ -124,7 +130,7 @@ public class ProjetoServiceImpl implements ProjetoService {
 
         return top3Projects;
     }
-
+    ////
     public Collection<RepositoryModel> getMatchingProjects(String accessToken) throws IOException {
           
         List<RepositoryModel> projects = new ArrayList<>();

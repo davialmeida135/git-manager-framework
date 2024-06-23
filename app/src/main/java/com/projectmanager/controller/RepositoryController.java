@@ -7,10 +7,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.kohsuke.github.GHMyself;
-import org.kohsuke.github.GHRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
@@ -20,13 +19,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.ui.Model; // Importe a classe Model
 
+import com.projectmanager.config.Global;
 import com.projectmanager.entities.Cronograma;
-import com.projectmanager.entities.Projeto;
 import com.projectmanager.entities.ScheduledActivity;
 import com.projectmanager.entities.Tarefa;
 import com.projectmanager.entities.Usuario;
@@ -36,17 +34,16 @@ import com.projectmanager.model.UsuarioModel;
 import com.projectmanager.service.ColaboradorService;
 import com.projectmanager.service.CronogramaService;
 import com.projectmanager.service.GitService;
-import com.projectmanager.service.GithubAPIService;
+
 import com.projectmanager.service.ProjetoService;
-import com.projectmanager.service.ProjetoServiceImpl;
-import com.projectmanager.service.TarefaService;
+import com.projectmanager.service.TarefaServiceAbs;
 
 @Controller
 @RequestMapping("/user/{user_id}/repositories")
 public class RepositoryController {
 
     @Autowired
-    @Qualifier("GithubService2")
+    @Qualifier(Global.GitClass)
     private GitService gitService; // Injete o serviço que obtém os repositórios do GitHub
 
     @Autowired
@@ -55,7 +52,7 @@ public class RepositoryController {
     @Autowired
     ProjetoService projetoService;
     @Autowired
-    TarefaService tarefaService;
+    TarefaServiceAbs tarefaService;
     @Autowired
     CronogramaService cronogramaService;
     @Autowired
@@ -100,7 +97,10 @@ public class RepositoryController {
             model.addAttribute("user", loggedUser);
 
             RepositoryModel repo = gitService.getRepository(accessToken, repoName);// Objeto do repositório
+            Set<Usuario> collab = gitService.getRepositoryCollaborators(accessToken, repoName);
+            model.addAttribute("collaborators", collab);
             model.addAttribute("repository", repo);
+
 
         } catch (IOException e) {
             model.addAttribute("errorMessage", e.getMessage());

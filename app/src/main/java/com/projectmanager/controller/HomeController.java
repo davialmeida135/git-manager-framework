@@ -1,9 +1,6 @@
 package com.projectmanager.controller;
 
 import java.io.IOException;
-
-import org.kohsuke.github.GHMyself;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
@@ -13,17 +10,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.projectmanager.config.Global;
 import com.projectmanager.entities.Usuario;
 import com.projectmanager.model.UsuarioModel;
 import com.projectmanager.service.GitService;
-import com.projectmanager.service.GithubAPIService;
+
 import com.projectmanager.service.UsuarioService;
 
 @Controller
 public class HomeController {
 
     @Autowired
-    @Qualifier("GithubService2")
+    @Qualifier(Global.GitClass)
     private GitService gitService; // Injete o serviço que obtém os repositórios do GitHub
 
     @Autowired

@@ -1,11 +1,9 @@
 package com.projectmanager.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
-import org.kohsuke.github.GHRepository;
+import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
@@ -17,19 +15,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.ui.Model; // Importe a classe Model
 
+import com.projectmanager.config.Global;
 import com.projectmanager.model.RepositoryModel;
 import com.projectmanager.service.ColaboradorService;
 import com.projectmanager.service.GitService;
-import com.projectmanager.service.GithubAPIService;
+
 import com.projectmanager.service.ProjetoService;
-import com.projectmanager.service.TarefaService;
+import com.projectmanager.service.TarefaServiceAbs;
 
 @Controller
 @RequestMapping("/user/{user_id}/projects")
 public class ProjectController {
 
     @Autowired
-    @Qualifier("GithubService2")
+    @Qualifier(Global.GitClass)
     private GitService gitService;
 
     @Autowired
@@ -39,7 +38,7 @@ public class ProjectController {
     ProjetoService projetoService;
 
     @Autowired
-    TarefaService tarefaService;
+    TarefaServiceAbs tarefaService;
 
     @Autowired
     ColaboradorService colaboradorService;

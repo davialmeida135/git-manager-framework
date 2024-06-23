@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
-import org.kohsuke.github.GHMyself;
-import org.kohsuke.github.GHRepository;
 
 import com.projectmanager.entities.Projeto;
 import com.projectmanager.model.RepositoryModel;

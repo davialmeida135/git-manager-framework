@@ -1,5 +1,5 @@
 <!-- Modal -->
-<div th:fragment="modal_form_tarefa(repository, user_id, repo_name, tarefa, usernames)"
+<div th:fragment="modal_form_tarefa(repository, user_id, repo_name, tarefa, usernames, collaborators)"
     class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
         <div class="modal-header">
@@ -33,11 +33,11 @@
                 <div class="col-12">
                     <fieldset class="border p-2">
                         <legend class="">Escolha a quem atribuir a tarefa:</legend>
-                        <div th:each="collab : ${repository.collaborators}" class="form-check form-check-inline px-0">
-                            <input th:value="${collab}" th:id="${collab}" type="checkbox" name="collaborators"
+                        <div th:each="collab : ${collaborators}" class="form-check form-check-inline px-0">
+                            <input th:value="${collab.username}" th:id="${collab.username}" type="checkbox" name="collaborators"
                                 class="btn-check" th:checked="${tarefa == null or (tarefa != null and #lists.contains(usernames, collab))}" autocomplete="off">
-                            <label th:for="${collab}" class="btn btn-outline-primary">
-                                <span th:text="${collab}"></span>
+                            <label th:for="${collab.username}" class="btn btn-outline-primary">
+                                <span th:text="${collab.username}"></span>
                             </label>
                         </div>
                     </fieldset>

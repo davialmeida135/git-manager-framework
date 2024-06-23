@@ -30,7 +30,7 @@ public class ColaboradorServiceImpl implements ColaboradorService {
     }
 
     @Override
-    public Iterable<Tarefa> findTasksByIDUser(int id, TarefaService tarefaService) {
+    public Iterable<Tarefa> findTasksByIDUser(int id, TarefaServiceAbs tarefaService) {
         ArrayList<Tarefa> tarefas = new ArrayList<>();
 
         for (Colaborador colaborador : findAll()) {

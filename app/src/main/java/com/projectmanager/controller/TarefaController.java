@@ -8,9 +8,9 @@ import java.util.Set;
 import java.util.Collection;
 import java.util.HashMap;
 
-import org.kohsuke.github.GHMyself;
-import org.kohsuke.github.GHRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -23,28 +23,35 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.projectmanager.entities.Comentario;
+import com.projectmanager.config.Global;
 import com.projectmanager.entities.Projeto;
 import com.projectmanager.entities.Tarefa;
+import com.projectmanager.entities.Usuario;
 import com.projectmanager.exceptions.BusinessException;
 import com.projectmanager.forms.TarefaForm;
 import com.projectmanager.model.ComentarioModel;
 import com.projectmanager.model.RepositoryModel;
+import com.projectmanager.model.UsuarioModel;
 import com.projectmanager.service.ComentarioService;
-import com.projectmanager.service.GithubAPIService;
+import com.projectmanager.service.GitService;
+
 import com.projectmanager.service.ProjetoService;
-import com.projectmanager.service.TarefaService;
-import org.springframework.web.bind.annotation.RequestBody;
+import com.projectmanager.service.TarefaServiceAbs;
+
 
 @Controller
 @RequestMapping("/user/{user_id}/repositories/{repo_name}/tasks")
 public class TarefaController {
 
-    private GithubAPIService githubService;
-    private final OAuth2AuthorizedClientService oauth2AuthorizedClientService;
+    @Autowired
+    @Qualifier(Global.GitClass)
+    private GitService gitService; // Injete o serviço que obtém os repositórios do GitHub
 
     @Autowired
-    TarefaService tarefaService;
+    private OAuth2AuthorizedClientService oauth2AuthorizedClientService;
+
+    @Autowired
+    TarefaServiceAbs tarefaService;
 
     @Autowired
     ComentarioService comentarioService;
@@ -52,27 +59,27 @@ public class TarefaController {
     @Autowired
     ProjetoService projetoService;
 
-    public TarefaController(GithubAPIService githubService,
-            OAuth2AuthorizedClientService oauth2AuthorizedClientService) {
-        this.githubService = githubService;
-        this.oauth2AuthorizedClientService = oauth2AuthorizedClientService;
-    }
-
     @GetMapping("")
     public String getUserTarefas(Model model, @PathVariable("repo_name") String repoName,
             @PathVariable("user_id") String user_id, OAuth2AuthenticationToken authenticationToken,
             @RequestParam(value = "error", required = false) String errorMessage) {
         String accessToken = githubService.getAccessToken(authenticationToken, "github", oauth2AuthorizedClientService);
 
+
+
         model.addAttribute("error", errorMessage);
-        int userIdInt = Integer.parseInt(user_id);
         model.addAttribute("user_id", user_id);
+
+       
+
+            
+            
 
         try {
             Map<Tarefa, Projeto> tarefaProjetoMap = new HashMap<>();
-            GHMyself loggedUser = githubService.getUser(accessToken); // Objeto do usuario
-            githubService.validateUser(loggedUser, user_id);
-            GHRepository repo = githubService.getRepository(loggedUser, repoName);
+            UsuarioModel loggedUser = gitService.getUsuarioModel(accessToken); // Objeto do usuario
+            gitService.validateUser(loggedUser, user_id);
+            RepositoryModel repo = gitService.getRepository(accessToken, repoName);
             int repoId = (int) repo.getId();
             Collection<Tarefa> tasks = tarefaService.getTaskByProject(repoId);
             model.addAttribute("tarefas", tasks);
@@ -81,11 +88,14 @@ public class TarefaController {
                 tarefaProjetoMap.put(tarefa, projeto);
             }
             model.addAttribute("tarefaProjetoMap", tarefaProjetoMap);
-            RepositoryModel repository = githubService.getRepositoryModel(loggedUser, repoName);// Objeto do repositório
+            RepositoryModel repository = gitService.getRepository(accessToken, repoName);// Objeto do repositório
             model.addAttribute("repository", repository);
         } catch (IOException e) {
             e.printStackTrace();
             model.addAttribute(e.getMessage());
+            return "error";
+        } catch (BusinessException e){
+            model.addAttribute("error", e.getMessage());
             return "error";
         }
         return "tarefas";
@@ -103,11 +113,11 @@ public class TarefaController {
             List<String> collaboratorUsernames = tarefaService.getCollaboratorsUsernames(tarefaEscolhida);
             model.addAttribute("usernames", collaboratorUsernames);
 
-            String accessToken = githubService.getAccessToken(authenticationToken, "github",
-                    oauth2AuthorizedClientService);
-            GHMyself loggedUser = githubService.getUser(accessToken);
-            RepositoryModel repository = githubService.getRepositoryModel(loggedUser, repoName);
+            String accessToken = gitService.getAccessToken(authenticationToken, oauth2AuthorizedClientService);
+            RepositoryModel repository = gitService.getRepository(accessToken, repoName);
+            Set<Usuario> collaborators = gitService.getRepositoryCollaborators(accessToken, repoName);
             model.addAttribute("repository", repository);
+            model.addAttribute("collaborators", collaborators);
 
             return "tarefa";
         } catch (Exception e) {
@@ -122,7 +132,7 @@ public class TarefaController {
             @PathVariable("repo_name") String repoName, @PathVariable("user_id") String user_id,
             Model model) {
 
-        String accessToken = githubService.getAccessToken(authenticationToken, "github", oauth2AuthorizedClientService);
+        String accessToken = gitService.getAccessToken(authenticationToken, oauth2AuthorizedClientService);
         try {
             tarefaService.save(novaTarefa, repoName, accessToken, user_id);
         } catch (IOException e) {
@@ -151,7 +161,7 @@ public class TarefaController {
     }
 
     @GetMapping("/{tarefa_id}/comments")
-    public String getComentarios(Model model, @PathVariable("tarefa_id") String tarefaId) {
+    public String getComentarios(OAuth2AuthenticationToken authenticationToken,Model model, @PathVariable("tarefa_id") String tarefaId) {
 
         Collection<ComentarioModel> comentarios = comentarioService.getComentarioTarefa(Integer.parseInt(tarefaId));
         model.addAttribute("comentarios", comentarios);
@@ -179,17 +189,20 @@ public class TarefaController {
             @PathVariable("repo_name") String repoName, @PathVariable("tarefa_id") String tarefaId,
             @PathVariable("user_id") String user_id, Model model) throws IOException {
 
-        String accessToken = githubService.getAccessToken(authenticationToken, "github", oauth2AuthorizedClientService);
+        String accessToken = gitService.getAccessToken(authenticationToken, oauth2AuthorizedClientService);
         try {
             int id = Integer.parseInt(tarefaId);
 
-            GHMyself loggedUser = githubService.getUser(accessToken); // Objeto do usuario
-            githubService.validateUser(loggedUser, user_id);
-            GHRepository repo = githubService.getRepository(loggedUser, repoName);
+            UsuarioModel loggedUser = gitService.getUsuarioModel(accessToken); // Objeto do usuario
+            gitService.validateUser(loggedUser, user_id);
+            
 
-            tarefaService.edit(novaTarefa, id, repo);
+            tarefaService.edit(novaTarefa, id, repoName, accessToken);
         } catch (NumberFormatException e) {
             e.printStackTrace();
+        } catch (BusinessException e) {
+            model.addAttribute("error", e.getMessage());
+            return "error";
         }
 
         return "redirect:/user/" + user_id + "/repositories/" + repoName + "/tasks";

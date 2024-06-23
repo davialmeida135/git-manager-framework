@@ -1,14 +1,12 @@
 package com.projectmanager.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.kohsuke.github.GHMyself;
-import org.kohsuke.github.GHRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
@@ -18,20 +16,21 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.projectmanager.config.Global;
 import com.projectmanager.entities.Projeto;
 import com.projectmanager.entities.Tarefa;
 import com.projectmanager.model.RepositoryModel;
 import com.projectmanager.service.ColaboradorService;
 import com.projectmanager.service.GitService;
-import com.projectmanager.service.GithubAPIService;
+
 import com.projectmanager.service.ProjetoService;
-import com.projectmanager.service.TarefaService;
+import com.projectmanager.service.TarefaServiceAbs;
 
 @Controller
 public class UserController {
 
     @Autowired
-    @Qualifier("GithubService2")
+    @Qualifier(Global.GitClass)
     private GitService gitService; // Injete o serviço que obtém os repositórios do GitHub
 
     @Autowired
@@ -44,7 +43,7 @@ public class UserController {
     ProjetoService projetoService;
 
     @Autowired
-    TarefaService tarefaService;
+    TarefaServiceAbs tarefaService;
 
 
     @GetMapping("/user/{user_id}")

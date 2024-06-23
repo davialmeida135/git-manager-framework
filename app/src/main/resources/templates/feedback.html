@@ -37,7 +37,7 @@
                             <legend class="">Escolha a quem enviar o feedback:</legend>
                             <select name="collaborators" class="form-control">
                                 
-                                <option th:each="collab : ${collaborators}" th:value="${collab}" th:text="${collab}"></option>
+                                <option th:each="collab : ${collaborators}" th:value="${collab.username}" th:text="${collab.username}"></option>
                             </select>
                         </fieldset>
                     </div>
