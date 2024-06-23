@@ -63,18 +63,11 @@ public class TarefaController {
     public String getUserTarefas(Model model, @PathVariable("repo_name") String repoName,
             @PathVariable("user_id") String user_id, OAuth2AuthenticationToken authenticationToken,
             @RequestParam(value = "error", required = false) String errorMessage) {
-        String accessToken = githubService.getAccessToken(authenticationToken, "github", oauth2AuthorizedClientService);
-
-
+        String accessToken = gitService.getAccessToken(authenticationToken,  oauth2AuthorizedClientService);
 
         model.addAttribute("error", errorMessage);
         model.addAttribute("user_id", user_id);
-
-       
-
             
-            
-
         try {
             Map<Tarefa, Projeto> tarefaProjetoMap = new HashMap<>();
             UsuarioModel loggedUser = gitService.getUsuarioModel(accessToken); // Objeto do usuario

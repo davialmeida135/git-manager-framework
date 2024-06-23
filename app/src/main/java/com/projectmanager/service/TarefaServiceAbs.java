@@ -35,6 +35,9 @@ public abstract class TarefaServiceAbs{
     TarefaRepository tarefaRepository;
 
     @Autowired
+    private TaskSortingStrategy sortingStrategy;
+
+    @Autowired
     ColaboradorService colaboradorService;
     @Autowired
     ComentarioService comentarioService;
@@ -181,6 +184,24 @@ public abstract class TarefaServiceAbs{
         }
 
         return tarefa;
+    }
+
+    public void setSortingStrategy(TaskSortingStrategy sortingStrategy) {
+        this.sortingStrategy = sortingStrategy;
+    }
+
+    public void sortTasks(Collection<Tarefa> tasks) {
+        if (sortingStrategy != null) {
+            sortingStrategy.sort(tasks);
+        } else {
+            throw new IllegalStateException("Sorting strategy not initialized");
+        }
+    }
+
+    public Collection<Tarefa> getSortedTasksByCriteria(int projectId) {
+        Collection<Tarefa> tasks = getTaskByProject(projectId); // Exemplo de método para buscar tarefas
+        sortTasks(tasks); // Usar a estratégia de ordenação injetada
+        return tasks;
     }
     
 }
