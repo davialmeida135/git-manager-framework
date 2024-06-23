@@ -64,16 +64,9 @@ public class TarefaController {
             @RequestParam(value = "error", required = false) String errorMessage) {
         String accessToken = githubService.getAccessToken(authenticationToken, "github", oauth2AuthorizedClientService);
 
-
-
         model.addAttribute("error", errorMessage);
         int userIdInt = Integer.parseInt(user_id);
         model.addAttribute("user_id", user_id);
-
-       
-
-            
-            
 
         try {
             Map<Tarefa, Projeto> tarefaProjetoMap = new HashMap<>();

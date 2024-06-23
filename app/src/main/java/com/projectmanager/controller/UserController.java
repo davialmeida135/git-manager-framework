@@ -70,8 +70,6 @@ public class UserController {
 
             Collection<RepositoryModel> projects = (Collection<RepositoryModel>) projetoService.findTop3ByOrderByDataCriacaoDesc(repositories);
 
-            
-
             model.addAttribute("repositories", projects);
         } catch (NumberFormatException e) {
             model.addAttribute("errorMessage", "Erro ao transformar o Id do usuario. " + e.getMessage());
