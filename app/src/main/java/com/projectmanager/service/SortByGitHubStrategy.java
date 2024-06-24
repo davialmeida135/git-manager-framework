@@ -2,7 +2,7 @@ package com.projectmanager.service;
 
 import com.projectmanager.entities.Tarefa;
 
-public class SortByGitHubStrategy implements TaskSortingStrategy {
+public class SortByGithubStrategy implements TaskSortingStrategy {
 
     @Override
     public void sort(Iterable<Tarefa> tasks) {
