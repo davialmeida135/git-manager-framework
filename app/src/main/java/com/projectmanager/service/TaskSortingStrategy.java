@@ -6,5 +6,5 @@ import java.util.Collection;
 import java.util.List;
 
 public interface TaskSortingStrategy {
-    void sort(Collection<Tarefa> tasks);
+    void sort(Iterable<Tarefa> tasks);
 }

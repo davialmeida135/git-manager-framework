@@ -17,7 +17,13 @@ public class ColaboradorServiceImpl implements ColaboradorService {
     ColaboradorRepository colaboradorRepository;
 
     @Autowired
+    private TaskSortingStrategy sortingStrategy;
+
+    @Autowired
     UsuarioService usuarioService;
+
+    @Autowired
+    private TarefaServiceAbs tarefaService;
 
     @Override
     public Iterable<Colaborador> findAll() {
@@ -63,6 +69,24 @@ public class ColaboradorServiceImpl implements ColaboradorService {
                 colaboradorRepository.delete(colaborador);
             }
         }
+    }
+
+    public void setSortingStrategy(TaskSortingStrategy sortingStrategy) {
+        this.sortingStrategy = sortingStrategy;
+    }
+
+    public void sortTasks(Iterable<Tarefa> tasks) {
+        if (sortingStrategy != null) {
+            sortingStrategy.sort(tasks);
+        } else {
+            throw new IllegalStateException("Sorting strategy not initialized");
+        }
+    }
+
+    public Iterable<Tarefa> getSortedTasksByCriteria(int projectId) {
+        Iterable<Tarefa> tasks = findTasksByIDUser(projectId, tarefaService); // Exemplo de método para buscar tarefas
+        sortTasks(tasks); // Usar a estratégia de ordenação injetada
+        return tasks;
     }
 
 }
