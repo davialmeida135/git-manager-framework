@@ -23,9 +23,6 @@ public class ColaboradorServiceImpl implements ColaboradorService {
     @Autowired
     UsuarioService usuarioService;
 
-    @Autowired
-    private TarefaServiceAbs tarefaService;
-
     @Override
     public Iterable<Colaborador> findAll() {
         return colaboradorRepository.findAll();
@@ -85,7 +82,7 @@ public class ColaboradorServiceImpl implements ColaboradorService {
         }
     }
 
-    public Iterable<Tarefa> getSortedTasksByCriteria(int projectId) {
+    public Iterable<Tarefa> getSortedTasksByCriteria(int projectId,TarefaServiceAbs tarefaService) {
         Iterable<Tarefa> iterable = findTasksByIDUser(projectId, tarefaService); // Assuming this returns an Iterable<Tarefa>
         List<Tarefa> tasks = new ArrayList<>();
         iterable.forEach(tasks::add);
