@@ -1,7 +1,7 @@
 package com.projectmanager.controller;
 
 import java.io.IOException;
-
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -54,8 +54,11 @@ public class UserController {
         try {
             int userIdInt = Integer.parseInt(userId);
             model.addAttribute("user_id", userId);
-            Iterable<Tarefa> tasks = colaboradorService.findTasksByIDUser(userIdInt, tarefaService);
-
+            Iterable<Tarefa> iterable = colaboradorService.findTasksByIDUser(userIdInt, tarefaService);
+            
+            List<Tarefa> tasks = new ArrayList<>();
+            iterable.forEach(tasks::add);
+            tasks = colaboradorService.sortTasks(tasks);
             Map<Tarefa, Projeto> tarefaProjetoMap = new HashMap<>();
 
             for (Tarefa tarefa : tasks) {

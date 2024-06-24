@@ -115,12 +115,6 @@ public class ProjetoServiceImpl implements ProjetoService {
         return orderedProjects;
     }
 
-    //TODO TRANSFORMAR EM PONTO FLEXÍVEL
-    private RecommendationStrategy recommendationStrategy;
-    void setRecommendationStrategy(RecommendationStrategy strategy) {
-        this.recommendationStrategy = strategy;
-    }
-
     @Override
     public List<RepositoryModel> findTop3ByOrderByDataCriacaoDesc(Collection<RepositoryModel> repositories) {
         List<RepositoryModel> orderedProjects = (List<RepositoryModel>) findProjectByUserRepositories(orderByDate(),

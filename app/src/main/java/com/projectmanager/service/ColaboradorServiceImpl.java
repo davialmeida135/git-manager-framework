@@ -1,6 +1,7 @@
 package com.projectmanager.service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ public class ColaboradorServiceImpl implements ColaboradorService {
     ColaboradorRepository colaboradorRepository;
 
     @Autowired
-    private TaskSortingStrategy sortingStrategy;
+    TaskSortingStrategy sortingStrategy;
 
     @Autowired
     UsuarioService usuarioService;
@@ -75,17 +76,21 @@ public class ColaboradorServiceImpl implements ColaboradorService {
         this.sortingStrategy = sortingStrategy;
     }
 
-    public void sortTasks(Iterable<Tarefa> tasks) {
+    @Override
+    public List<Tarefa> sortTasks(List<Tarefa> tasks) {
         if (sortingStrategy != null) {
-            sortingStrategy.sort(tasks);
+            return sortingStrategy.sort(tasks);
         } else {
             throw new IllegalStateException("Sorting strategy not initialized");
         }
     }
 
     public Iterable<Tarefa> getSortedTasksByCriteria(int projectId) {
-        Iterable<Tarefa> tasks = findTasksByIDUser(projectId, tarefaService); // Exemplo de método para buscar tarefas
-        sortTasks(tasks); // Usar a estratégia de ordenação injetada
+        Iterable<Tarefa> iterable = findTasksByIDUser(projectId, tarefaService); // Assuming this returns an Iterable<Tarefa>
+        List<Tarefa> tasks = new ArrayList<>();
+        iterable.forEach(tasks::add);
+        setSortingStrategy(new SortByGithubStrategy());
+        tasks = sortTasks(tasks); // Usar a estratégia de ordenação injetada
         return tasks;
     }
 

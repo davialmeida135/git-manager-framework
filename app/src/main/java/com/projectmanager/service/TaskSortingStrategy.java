@@ -5,6 +5,9 @@ import com.projectmanager.entities.Tarefa;
 import java.util.Collection;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
+@Service("SortingStrategy")
 public interface TaskSortingStrategy {
-    void sort(Iterable<Tarefa> tasks);
+    List<Tarefa> sort(List<Tarefa> tasks);
 }
