@@ -7,6 +7,9 @@ public abstract class ScheduledActivity {
     private String titulo;
     private String descricao;
     private String prazo;
+
+    public abstract boolean isGithubTarefa();
+    
     public String getTitulo() {
         return titulo;
     }

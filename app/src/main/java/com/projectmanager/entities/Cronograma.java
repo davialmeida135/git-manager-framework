@@ -32,4 +32,9 @@ public class Cronograma extends ScheduledActivity{
         this.projeto_id = projeto_id;
     }
 
+    @Override
+    public boolean isGithubTarefa() {
+        return false;
+    }
+
 }

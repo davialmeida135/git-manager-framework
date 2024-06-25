@@ -16,9 +16,8 @@ import com.projectmanager.forms.TarefaForm;
 import com.projectmanager.model.RepositoryModel;
 import com.projectmanager.model.UsuarioModel;
 
-
 @Service("TarefaService")
-public class TarefaGithubService extends TarefaServiceAbs{
+public class TarefaGithubService extends TarefaServiceAbs {
     @Autowired
     @Qualifier(Global.GitClass)
     private GitService gitService;
@@ -41,22 +40,25 @@ public class TarefaGithubService extends TarefaServiceAbs{
     }
 
     @Override
-    public Tarefa formToTarefa(TarefaForm tarefaForm, String repoName, String accessToken) throws BusinessException, IOException {
+    public Tarefa formToTarefa(TarefaForm tarefaForm, String repoName, String accessToken)
+            throws BusinessException, IOException {
         TarefaGitHub newTarefa = new TarefaGitHub();
         newTarefa.setTitulo(tarefaForm.getTitulo());
         newTarefa.setDescricao(tarefaForm.getDescricao());
         newTarefa.setPrazo(tarefaForm.getPrazo());
-        
+
         UsuarioModel loggedUser = gitService.getUsuarioModel(accessToken); // Objeto do usuario
         gitService.validateUser(loggedUser, String.valueOf(loggedUser.getId()));
         RepositoryModel repo = gitService.getRepository(accessToken, repoName);
         newTarefa.setId_criador((int) loggedUser.getId());
         newTarefa.setId_projeto((int) repo.getId());
+        newTarefa.setConhecimentos(tarefaForm.getConhecimentos());
+        newTarefa.setReferencias(tarefaForm.getReferencias());
 
-        newTarefa.setConhecimentos("SQL, Spring");
-        newTarefa.setReferencias("Livro bem legal");
+        // newTarefa.setConhecimentos("SQL, Spring");
+        // newTarefa.setReferencias("Livro bem legal");
 
         return newTarefa;
     }
-    
+
 }

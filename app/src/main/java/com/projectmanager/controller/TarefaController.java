@@ -124,7 +124,6 @@ public class TarefaController {
     public String createTarefa(OAuth2AuthenticationToken authenticationToken, @ModelAttribute TarefaForm novaTarefa,
             @PathVariable("repo_name") String repoName, @PathVariable("user_id") String user_id,
             Model model) {
-
         String accessToken = gitService.getAccessToken(authenticationToken, oauth2AuthorizedClientService);
         try {
             tarefaService.save(novaTarefa, repoName, accessToken, user_id);

@@ -7,17 +7,17 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <!-- Your form content goes here -->
-            <form
-                th:action="@{${tarefa == null} ? '/user/' + ${user_id} + '/repositories/' + ${repo_name} + '/tasks/new' : '/user/' + ${user_id} + '/repositories/' + ${repo_name} + '/tasks/' + ${tarefa.id} + '/edit'}"
+            <!-- Formulário Comum -->
+            <form th:action="@{${tarefa == null} ? '/user/' + ${user_id} + '/repositories/' + ${repo_name} + '/tasks/new' : '/user/' + ${user_id} + '/repositories/' + ${repo_name} + '/tasks/' + ${tarefa.id} + '/edit'}"
                 method="POST" class="row g-3 needs-validation">
-                <div class="col-md-6 ">
+
+                <div class="col-md-6">
                     <label for="titulo" class="form-label">Título</label>
                     <input type="text" class="form-control" id="titulo" name="titulo" placeholder="Título"
                         th:value="${tarefa != null ? tarefa.titulo : ''}" required>
                 </div>
 
-                <div class="col-md-6 ">
+                <div class="col-md-6">
                     <label for="data" class="form-label">Data:</label>
                     <input type="date" class="form-control" id="data" name="prazo" placeholder="Selecione uma data"
                         th:value="${tarefa != null ? tarefa.prazo : ''}" required>
@@ -25,17 +25,32 @@
 
                 <div class="col-12">
                     <label for="descricao" class="form-label">Descrição</label>
-                    <textarea type="text" class="form-control" id="descricao" name="descricao"
-                        placeholder="A tarefa consiste em..."
-                        th:text="${tarefa != null ? tarefa.descricao : ''}"> </textarea>
+                    <textarea class="form-control" id="descricao" name="descricao" placeholder="A tarefa consiste em..."
+                        th:text="${tarefa != null ? tarefa.descricao : ''}"></textarea>
+                </div>
+
+                <div class="col-12">
+                    <label for="conhecimentos" class="form-label">Conhecimentos Necessários</label>
+                    <textarea class="form-control" id="conhecimentos" name="conhecimentos"
+                        placeholder="Quais conhecimentos são necessários?"
+                        th:text="${tarefa != null ? tarefa.conhecimentos : ''}"></textarea>
+                </div>
+
+                <div class="col-12">
+                    <label for="referencias" class="form-label">Referências</label>
+                    <textarea class="form-control" id="referencias" name="referencias"
+                        placeholder="Adicione referências relevantes"
+                        th:text="${tarefa != null ? tarefa.referencias : ''}"></textarea>
                 </div>
 
                 <div class="col-12">
                     <fieldset class="border p-2">
-                        <legend class="">Escolha a quem atribuir a tarefa:</legend>
+                        <legend>Escolha a quem atribuir a tarefa:</legend>
                         <div th:each="collab : ${collaborators}" class="form-check form-check-inline px-0">
                             <input th:value="${collab.username}" th:id="${collab.username}" type="checkbox" name="collaborators"
-                                class="btn-check" th:checked="${tarefa == null or (tarefa != null and #lists.contains(usernames, collab))}" autocomplete="off">
+                                class="btn-check"
+                                th:checked="${tarefa == null or (tarefa != null and #lists.contains(usernames, collab))}"
+                                autocomplete="off">
                             <label th:for="${collab.username}" class="btn btn-outline-primary">
                                 <span th:text="${collab.username}"></span>
                             </label>
@@ -47,11 +62,14 @@
                     <button type="submit" class="btn btn-primary">Salvar Tarefa</button>
                 </div>
 
-                <div class="alert alert-danger" role="alert" th:if="${errors}">
-                    <ul>
-                        <li th:each="error : ${errors}" th:text="${error.defaultMessage}"></li>
-                    </ul>
+                <div class="col-12">
+                    <div class="alert alert-danger" role="alert" th:if="${errors}">
+                        <ul>
+                            <li th:each="error : ${errors}" th:text="${error.defaultMessage}"></li>
+                        </ul>
+                    </div>
                 </div>
+
             </form>
         </div>
     </div>

@@ -20,5 +20,9 @@ public class TarefaForm {
 
     private List<String> collaborators;
 
+    private String conhecimentos;
+    
+    private String referencias;
+
     // getters and setters for all fields
 }

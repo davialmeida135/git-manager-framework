@@ -75,8 +75,7 @@ public abstract class TarefaServiceAbs{
         }
                 
         return newTarefa;
-    }
-    
+    }    
     
     public Tarefa save(IssueModel issue, int repoId){
         Tarefa newTarefa = instantiateTarefa();
@@ -114,9 +113,6 @@ public abstract class TarefaServiceAbs{
 
     
     public Tarefa edit(TarefaForm tarefaForm, int tarefaId, String repoName, String accessToken) throws BusinessException, IOException {
-
-        
-
         colaboradorService.deleteColaboradoresTarefa(tarefaId);
         tarefaRepository.deleteById(tarefaId);
 

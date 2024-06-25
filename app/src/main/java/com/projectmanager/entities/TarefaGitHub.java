@@ -23,4 +23,8 @@ public class TarefaGitHub extends Tarefa{
         this.conhecimentos = conhecimentos;
     }
 
+    @Override
+    public boolean isGithubTarefa() {
+        return true;
+    }
 }

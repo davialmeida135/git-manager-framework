@@ -1,7 +1,5 @@
 package com.projectmanager.entities;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -73,5 +71,10 @@ public class Tarefa extends ScheduledActivity{
 
     public void setId_projeto(int id_projeto) {
         this.id_projeto = id_projeto;
+    }
+
+    @Override
+    public boolean isGithubTarefa() {
+        return false;
     }
 }
