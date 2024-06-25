@@ -18,12 +18,17 @@ public class SortByGithubStrategy implements TaskSortingStrategy {
 
     @Override
     public List<Tarefa> sort(List<Tarefa> tasks) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate today = LocalDate.now();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        List<Tarefa> sortedSchedule = tasks.stream()
+    List<Tarefa> sortedSchedule = tasks.stream()
+        .filter(s -> LocalDate.parse(s.getPrazo(), formatter).compareTo(today) >= 0) // Filter tasks with deadlines today or in the future
         .sorted(Comparator.comparing(s -> LocalDate.parse(s.getPrazo(), formatter)))
+        .limit(3) // Limit to top 3 closest dates
         .collect(Collectors.toList());
 
-        return sortedSchedule;
+    System.out.println("Top 3 Upcoming SortedSchedule: " + sortedSchedule);
+
+    return sortedSchedule;
     }
 }
