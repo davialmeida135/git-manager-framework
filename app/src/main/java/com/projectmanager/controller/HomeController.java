@@ -55,13 +55,14 @@ public class HomeController {
 
         // TODO: alterar a rota
         try {
-            String userId = gitService.getUserId(authenticationToken,oauth2AuthorizedClientService);
+            String userId = gitService.getUserId(authenticationToken, oauth2AuthorizedClientService);
             return "redirect:/user/" + userId + "/projects";
         } catch (IOException e) {
-            model.addAttribute(e.getMessage());
+            model.addAttribute("errorMessage", "Erro ao obter os projetos do usuário: " + e.getMessage());
+            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
         }
-        
+
     }
 
     @GetMapping("/repositories")
@@ -69,15 +70,16 @@ public class HomeController {
         if (!gitService.isAuthenticated(authenticationToken)) {
             return "redirect:/";
         }
-       
+
         try {
-            String userId = gitService.getUserId(authenticationToken,oauth2AuthorizedClientService);
+            String userId = gitService.getUserId(authenticationToken, oauth2AuthorizedClientService);
             return "redirect:/user/" + userId + "/repositories";
         } catch (IOException e) {
-            model.addAttribute(e.getMessage());
+            model.addAttribute("errorMessage", "Erro ao obter os repositórios do usuário: " + e.getMessage());
+            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
         }
-        
+
     }
 
     @GetMapping("/sobre")
@@ -87,30 +89,31 @@ public class HomeController {
             // modelo
             String accessToken = gitService.getAccessToken(authenticationToken,
                     oauth2AuthorizedClientService);
-            
+
             try {
                 UsuarioModel loggedUser = gitService.getUsuarioModel(accessToken);
                 model.addAttribute("user", loggedUser);
             } catch (IOException e) {
-                model.addAttribute(e.getMessage());
+                model.addAttribute("errorMessage", "Erro ao obter informações do usuário: " + e.getMessage());
+                model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
                 return "error";
             }
-            
+
         }
 
         return "sobre";
     }
 
-    private String processAuthenticatedUser(Model model, OAuth2AuthenticationToken authenticationToken){
-        String accessToken = gitService.getAccessToken(authenticationToken,  oauth2AuthorizedClientService);
+    private String processAuthenticatedUser(Model model, OAuth2AuthenticationToken authenticationToken) {
+        String accessToken = gitService.getAccessToken(authenticationToken, oauth2AuthorizedClientService);
         try {
             Usuario usuario = gitService.getUsuario(accessToken);
             usuarioService.save(usuario);
 
-        return "redirect:/user/" + Integer.toString(usuario.getId());
-        }
-        catch (IOException e) {
-            model.addAttribute(e.getMessage());
+            return "redirect:/user/" + Integer.toString(usuario.getId());
+        } catch (IOException e) {
+            model.addAttribute("errorMessage", "Erro ao processar usuário autenticado: " + e.getMessage());
+            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
         }
     }

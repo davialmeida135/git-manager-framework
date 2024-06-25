@@ -21,7 +21,6 @@ import com.projectmanager.service.FeedbackService;
 import com.projectmanager.service.GitService;
 import com.projectmanager.config.Global;
 
-
 @Controller
 @RequestMapping("/user/{user_id}/repositories/{repo_name}/feedback")
 public class FeedbackController {
@@ -33,21 +32,20 @@ public class FeedbackController {
     private OAuth2AuthorizedClientService oauth2AuthorizedClientService;
     @Autowired
     FeedbackService feedbackService;
-    
 
-    
     @GetMapping("")
-    public String getFeedback(OAuth2AuthenticationToken authenticationToken, Model model,@PathVariable("repo_name") String repoName) {
+    public String getFeedback(OAuth2AuthenticationToken authenticationToken, Model model,
+            @PathVariable("repo_name") String repoName) {
         String accessToken = gitService.getAccessToken(authenticationToken, oauth2AuthorizedClientService);
         try {
-            Iterable<Feedback> feedbacks = feedbackService.getFeedbacksUsuarioProjeto(accessToken,repoName);
-            
+            Iterable<Feedback> feedbacks = feedbackService.getFeedbacksUsuarioProjeto(accessToken, repoName);
+
             Set<Usuario> collaborators = gitService.getRepositoryCollaborators(accessToken, repoName);
             model.addAttribute("feedbacks", feedbacks);
             model.addAttribute("collaborators", collaborators);
         } catch (IOException e) {
-            e.printStackTrace();
-            model.addAttribute(e.getMessage());
+            model.addAttribute("errorMessage", "Erro ao obter feedbacks do projeto: " + e.getMessage());
+            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
         }
 
@@ -56,17 +54,16 @@ public class FeedbackController {
 
     @PostMapping("")
     public String createFeedback(OAuth2AuthenticationToken authenticationToken, Model model,
-     @PathVariable("repo_name") String repoName,@ModelAttribute FeedbackForm novoFeedback,
-     @PathVariable("user_id") String userId) {
+            @PathVariable("repo_name") String repoName, @ModelAttribute FeedbackForm novoFeedback,
+            @PathVariable("user_id") String userId) {
         try {
             String accessToken = gitService.getAccessToken(authenticationToken, oauth2AuthorizedClientService);
             System.out.println(novoFeedback.getMensagem());
             System.out.println(novoFeedback.getCollaborators());
-            feedbackService.save(repoName, accessToken , novoFeedback);
-        }
-        catch (IOException e){
-            e.printStackTrace();
-            model.addAttribute(e.getMessage());
+            feedbackService.save(repoName, accessToken, novoFeedback);
+        } catch (IOException e) {
+            model.addAttribute("errorMessage", "Erro ao criar feedback: " + e.getMessage());
+            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
         }
         String redirect = "redirect:/user/" + userId + "/repositories/" + repoName + "/feedback";

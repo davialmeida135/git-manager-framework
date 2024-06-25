@@ -84,11 +84,12 @@ public class TarefaController {
             RepositoryModel repository = gitService.getRepository(accessToken, repoName);// Objeto do repositório
             model.addAttribute("repository", repository);
         } catch (IOException e) {
-            e.printStackTrace();
-            model.addAttribute(e.getMessage());
+            model.addAttribute("errorMessage", "Falha ao conectar ao serviço de repositório." + e.getMessage());
+            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
         } catch (BusinessException e){
-            model.addAttribute("error", e.getMessage());
+            model.addAttribute("errorMessage", "Erro ao buscar as tarefas. Verifique se possui permissão para acessar este repositório." + e.getMessage());
+            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
         }
         return "tarefas";
@@ -114,7 +115,8 @@ public class TarefaController {
 
             return "tarefa";
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "Erro ao obter os repositórios do usuário: " + e.getMessage());
+            model.addAttribute("errorMessage", "Erro ao obter a tarefa." + e.getMessage());
+            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
         }
 
@@ -128,23 +130,24 @@ public class TarefaController {
         try {
             tarefaService.save(novaTarefa, repoName, accessToken, user_id);
         } catch (IOException e) {
-            e.printStackTrace();
-            model.addAttribute("error", e.getMessage());
+            model.addAttribute("errorMessage", "Falha ao conectar ao serviço de repositório." + e.getMessage());
+            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
         } catch (DateTimeParseException e) {
-            e.printStackTrace();
-            model.addAttribute("error", e.getMessage());
+            model.addAttribute("errorMessage", "Formato de data e hora inválido. Verifique o formato da data informada." + e.getMessage());
+            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
         } catch (NumberFormatException e) {
-            e.printStackTrace();
-            model.addAttribute("error", e.getMessage());
+            model.addAttribute("errorMessage", "Valor numérico inválido. Verifique os dados inseridos." + e.getMessage());
+            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
         } catch (BusinessException e) {
             String redirect = "redirect:/user/" + user_id + "/repositories/" + repoName + "/tasks?error="
                     + e.getMessage();
             return redirect;
         } catch (PermissionDeniedDataAccessException e) {
-            model.addAttribute("error", e.getMessage());
+            model.addAttribute("errorMessage", "Acesso negado. Você não possui permissão para criar tarefas neste repositório.." + e.getMessage());
+            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
         }
 
@@ -191,9 +194,12 @@ public class TarefaController {
 
             tarefaService.edit(novaTarefa, id, repoName, accessToken);
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            model.addAttribute("errorMessage", "Valor numérico inválido." + e.getMessage());
+            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
+            return "error";
         } catch (BusinessException e) {
-            model.addAttribute("error", e.getMessage());
+            model.addAttribute("errorMessage", "Erro ao editar a tarefa. Verifique os dados informados." + e.getMessage());
+            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
         }
 

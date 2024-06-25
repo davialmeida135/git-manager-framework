@@ -62,12 +62,12 @@ public class RepositoryController {
     public String getUserRepositories(@PathVariable("user_id") String user_id,
             OAuth2AuthenticationToken authenticationToken, Model model) {
         String accessToken = gitService.getAccessToken(authenticationToken, oauth2AuthorizedClientService);
-        
+
         // Obter todos os repositórios do usuário no GitHub
         try {
             UsuarioModel loggedUser = gitService.getUsuarioModel(accessToken);
 
-            //Verifica se o usuário logado está acessando a própria página
+            // Verifica se o usuário logado está acessando a própria página
             if (!user_id.equals(Long.toString(loggedUser.getId()))) {
                 model.addAttribute("errorMessage", "Usuário inválido.");
                 return "error";
@@ -76,6 +76,7 @@ public class RepositoryController {
             model.addAttribute("repositories", repositories);
         } catch (IOException e) {
             model.addAttribute("errorMessage", "Erro ao obter os repositórios do usuário: " + e.getMessage());
+            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
         }
         model.addAttribute("objeto_da_lista", "Repositories");
@@ -86,14 +87,12 @@ public class RepositoryController {
     @GetMapping("/{repo_name}")
     public String getRepository(@PathVariable("user_id") String user_id, @PathVariable("repo_name") String repoName,
             OAuth2AuthenticationToken authenticationToken, Model model) {
+        String accessToken = gitService.getAccessToken(authenticationToken, oauth2AuthorizedClientService);
 
-        String accessToken = gitService.getAccessToken(authenticationToken,  oauth2AuthorizedClientService);
-        
-        
         try {
             UsuarioModel loggedUser = gitService.getUsuarioModel(accessToken); // Objeto do usuario
             gitService.validateUser(loggedUser, user_id);
-            projetoService.save(accessToken, repoName); 
+            projetoService.save(accessToken, repoName);
             model.addAttribute("user", loggedUser);
 
             RepositoryModel repo = gitService.getRepository(accessToken, repoName);// Objeto do repositório
@@ -101,31 +100,33 @@ public class RepositoryController {
             model.addAttribute("collaborators", collab);
             model.addAttribute("repository", repo);
 
-
         } catch (IOException e) {
-            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("errorMessage", "Erro ao obter repositório: " + e.getMessage());
+            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
         } catch (BusinessException e) {
-            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("errorMessage", "Erro ao validar usuário: " + e.getMessage());
+            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
         }
 
         return "project";
     }
-    @GetMapping("/{repo_name}/cronograma")
-    public String getRepositoryCronograma(@PathVariable("user_id") String user_id, @PathVariable("repo_name") String repoName,
-            OAuth2AuthenticationToken authenticationToken, Model model) {
 
+    @GetMapping("/{repo_name}/cronograma")
+    public String getRepositoryCronograma(@PathVariable("user_id") String user_id,
+            @PathVariable("repo_name") String repoName,
+            OAuth2AuthenticationToken authenticationToken, Model model) {
         String accessToken = gitService.getAccessToken(authenticationToken, oauth2AuthorizedClientService);
-        
+
         try {
             UsuarioModel loggedUser = gitService.getUsuarioModel(accessToken); // Objeto do usuario
             gitService.validateUser(loggedUser, user_id);
             RepositoryModel repo = gitService.getRepository(accessToken, repoName);
 
-            //Criação de um cronograma para o projeto
-            Collection<Cronograma> cronogramas = cronogramaService.getCronogramasProjeto((int)repo.getId());
-            Collection<Tarefa> tarefas = tarefaService.getTaskByProject((int)repo.getId());
+            // Criação de um cronograma para o projeto
+            Collection<Cronograma> cronogramas = cronogramaService.getCronogramasProjeto((int) repo.getId());
+            Collection<Tarefa> tarefas = tarefaService.getTaskByProject((int) repo.getId());
 
             Collection<ScheduledActivity> schedule = new ArrayList<ScheduledActivity>();
             schedule.addAll(cronogramas);
@@ -133,19 +134,21 @@ public class RepositoryController {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
             List<ScheduledActivity> sortedSchedule = schedule.stream()
-            .sorted(Comparator.comparing(s -> LocalDate.parse(s.getPrazo(), formatter)))
-            .collect(Collectors.toList());
-            //TODO levar criação do cronograma para o service
+                    .sorted(Comparator.comparing(s -> LocalDate.parse(s.getPrazo(), formatter)))
+                    .collect(Collectors.toList());
+            // TODO levar criação do cronograma para o service
 
             model.addAttribute("schedule", sortedSchedule);
             model.addAttribute("repository", repo);
             model.addAttribute("user_id", user_id);
 
         } catch (IOException e) {
-            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("errorMessage", "Erro ao obter cronograma: " + e.getMessage());
+            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
         } catch (BusinessException e) {
-            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("errorMessage", "Erro ao validar usuário: " + e.getMessage());
+            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
         }
         return "cronograma";
@@ -153,7 +156,7 @@ public class RepositoryController {
 
     @PostMapping("/{repo_name}/cronograma/new")
     public String createNewTask(@PathVariable("user_id") String user_id, @PathVariable("repo_name") String repoName,
-        OAuth2AuthenticationToken authenticationToken, Model model, @ModelAttribute Cronograma newCronograma) {
+            OAuth2AuthenticationToken authenticationToken, Model model, @ModelAttribute Cronograma newCronograma) {
 
         String accessToken = gitService.getAccessToken(authenticationToken, oauth2AuthorizedClientService);
         System.out.println("fase1");
@@ -162,16 +165,18 @@ public class RepositoryController {
             gitService.validateUser(loggedUser, user_id);
             RepositoryModel repo = gitService.getRepository(accessToken, repoName);
             System.out.println("fase2");
-            newCronograma.setProjeto_id((int)repo.getId());
+            newCronograma.setProjeto_id((int) repo.getId());
 
             cronogramaService.save(newCronograma);
             System.out.println("fase3");
             return "redirect:/user/" + user_id + "/repositories/" + repoName + "/cronograma";
         } catch (IOException e) {
-            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("errorMessage", "Erro ao criar nova tarefa no cronograma: " + e.getMessage());
+            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
         } catch (BusinessException e) {
-            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("errorMessage", "Erro ao validar usuário: " + e.getMessage());
+            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
         }
     }

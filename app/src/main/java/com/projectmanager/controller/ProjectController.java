@@ -47,7 +47,7 @@ public class ProjectController {
     public String getUserProjects(@PathVariable("user_id") String userId,
             OAuth2AuthenticationToken authenticationToken,
             Model model) {
-        String accessToken = gitService.getAccessToken(authenticationToken,  oauth2AuthorizedClientService);
+        String accessToken = gitService.getAccessToken(authenticationToken, oauth2AuthorizedClientService);
         Collection<RepositoryModel> projects;
         try {
             projects = projetoService.getMatchingProjects(accessToken);
@@ -60,6 +60,6 @@ public class ProjectController {
 
         model.addAttribute("repositories", projects);
 
-        return "repositories"; 
+        return "repositories";
     }
 }

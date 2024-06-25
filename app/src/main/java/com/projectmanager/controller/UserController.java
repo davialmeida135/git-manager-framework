@@ -45,39 +45,42 @@ public class UserController {
     @Autowired
     TarefaServiceAbs tarefaService;
 
-
     @GetMapping("/user/{user_id}")
     public String getUserPage(@PathVariable("user_id") String userId, OAuth2AuthenticationToken authenticationToken,
             Model model) {
         String accessToken = gitService.getAccessToken(authenticationToken, oauth2AuthorizedClientService);
-        
+
         try {
             int userIdInt = Integer.parseInt(userId);
             model.addAttribute("user_id", userId);
-            Iterable<Tarefa> iterable = colaboradorService.findTasksByIDUser(userIdInt, tarefaService);
-            
-            List<Tarefa> tasks = new ArrayList<>();
-            iterable.forEach(tasks::add);
-            tasks = colaboradorService.sortTasks(tasks);
-            Map<Tarefa, Projeto> tarefaProjetoMap = new HashMap<>();
+            Iterable<Tarefa> tasks_list_byUser = colaboradorService.findTasksByIDUser(userIdInt, tarefaService);
 
+            List<Tarefa> tasks = new ArrayList<>();
+            tasks_list_byUser.forEach(tasks::add);
+
+            tasks = colaboradorService.sortTasks(tasks);
+
+            Map<Tarefa, Projeto> tarefaProjetoMap = new HashMap<>();
             for (Tarefa tarefa : tasks) {
                 Projeto projeto = projetoService.find(tarefa.getId_projeto());
                 tarefaProjetoMap.put(tarefa, projeto);
             }
+
             model.addAttribute("tarefaProjetoMap", tarefaProjetoMap);
             model.addAttribute("tarefas", tasks);
 
             List<RepositoryModel> repositories = gitService.getRepositories(accessToken);
-
-            Collection<RepositoryModel> projects = (Collection<RepositoryModel>) projetoService.findTop3ByOrderByDataCriacaoDesc(repositories);
+            Collection<RepositoryModel> projects = (Collection<RepositoryModel>) projetoService
+                    .findTop3ByOrderByDataCriacaoDesc(repositories);
 
             model.addAttribute("repositories", projects);
         } catch (NumberFormatException e) {
-            model.addAttribute("errorMessage", "Erro ao transformar o Id do usuario. " + e.getMessage());
+            model.addAttribute("errorMessage", "Erro ao transformar o Id do usuário. " + e.getMessage());
+            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
         } catch (IOException e) {
-            model.addAttribute("errorMessage", "Erro ao buscar os repositorios do usuario. " + e.getMessage());
+            model.addAttribute("errorMessage", "Erro ao buscar os repositórios do usuário. " + e.getMessage());
+            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
         }
 
