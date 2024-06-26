@@ -76,10 +76,11 @@ public class RepositoryController {
             model.addAttribute("repositories", repositories);
         } catch (IOException e) {
             model.addAttribute("errorMessage", "Erro ao obter os repositórios do usuário: " + e.getMessage());
-            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
+            model.addAttribute("errorDetails" + e.toString());
             return "error";
         }
         model.addAttribute("objeto_da_lista", "Repositories");
+        model.addAttribute("user", user_id);
         return "repositories";
     }
 
@@ -102,11 +103,11 @@ public class RepositoryController {
 
         } catch (IOException e) {
             model.addAttribute("errorMessage", "Erro ao obter repositório: " + e.getMessage());
-            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
+            model.addAttribute("errorDetails" + e.toString());
             return "error";
         } catch (BusinessException e) {
             model.addAttribute("errorMessage", "Erro ao validar usuário: " + e.getMessage());
-            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
+            model.addAttribute("errorDetails" + e.toString());
             return "error";
         }
 
@@ -140,15 +141,15 @@ public class RepositoryController {
 
             model.addAttribute("schedule", sortedSchedule);
             model.addAttribute("repository", repo);
-            model.addAttribute("user_id", user_id);
+            model.addAttribute("user", user_id);
 
         } catch (IOException e) {
             model.addAttribute("errorMessage", "Erro ao obter cronograma: " + e.getMessage());
-            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
+            model.addAttribute("errorDetails" + e.toString());
             return "error";
         } catch (BusinessException e) {
             model.addAttribute("errorMessage", "Erro ao validar usuário: " + e.getMessage());
-            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
+            model.addAttribute("errorDetails" + e.toString());
             return "error";
         }
         return "cronograma";
@@ -172,11 +173,11 @@ public class RepositoryController {
             return "redirect:/user/" + user_id + "/repositories/" + repoName + "/cronograma";
         } catch (IOException e) {
             model.addAttribute("errorMessage", "Erro ao criar nova tarefa no cronograma: " + e.getMessage());
-            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
+            model.addAttribute("errorDetails" + e.toString());
             return "error";
         } catch (BusinessException e) {
             model.addAttribute("errorMessage", "Erro ao validar usuário: " + e.getMessage());
-            model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
+            model.addAttribute("errorDetails" + e.toString());
             return "error";
         }
     }

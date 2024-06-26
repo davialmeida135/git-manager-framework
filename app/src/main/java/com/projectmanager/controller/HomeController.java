@@ -32,7 +32,7 @@ public class HomeController {
     private UsuarioService usuarioService;
 
     @GetMapping("/")
-    public String getIndex(OAuth2AuthenticationToken authenticationToken) {
+    public String getIndex(OAuth2AuthenticationToken authenticationToken, Model model) {
         if (gitService.isAuthenticated(authenticationToken)) {
             return "redirect:/home";
         }
@@ -92,19 +92,25 @@ public class HomeController {
 
             try {
                 UsuarioModel loggedUser = gitService.getUsuarioModel(accessToken);
-                model.addAttribute("user", loggedUser);
+                model.addAttribute("user", loggedUser.getId());
             } catch (IOException e) {
                 model.addAttribute("errorMessage", "Erro ao obter informações do usuário: " + e.getMessage());
                 model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
                 return "error";
             }
 
+        } else {
+            model.addAttribute("user", null);
         }
 
         return "sobre";
     }
 
     private String processAuthenticatedUser(Model model, OAuth2AuthenticationToken authenticationToken) {
+        if (!gitService.isAuthenticated(authenticationToken)) {
+            // Usuário não autenticado, faça o que for necessário (por exemplo, redirecionar para página de login)
+            return "redirect:/";
+        }
         String accessToken = gitService.getAccessToken(authenticationToken, oauth2AuthorizedClientService);
         try {
             Usuario usuario = gitService.getUsuario(accessToken);

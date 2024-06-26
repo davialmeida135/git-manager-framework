@@ -35,12 +35,13 @@ public class FeedbackController {
 
     @GetMapping("")
     public String getFeedback(OAuth2AuthenticationToken authenticationToken, Model model,
-            @PathVariable("repo_name") String repoName) {
+            @PathVariable("repo_name") String repoName, @PathVariable("user_id") String user_id) {
         String accessToken = gitService.getAccessToken(authenticationToken, oauth2AuthorizedClientService);
         try {
             Iterable<Feedback> feedbacks = feedbackService.getFeedbacksUsuarioProjeto(accessToken, repoName);
 
             Set<Usuario> collaborators = gitService.getRepositoryCollaborators(accessToken, repoName);
+            model.addAttribute("user", feedbacks);
             model.addAttribute("feedbacks", feedbacks);
             model.addAttribute("collaborators", collaborators);
         } catch (IOException e) {

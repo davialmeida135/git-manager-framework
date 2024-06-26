@@ -8,7 +8,7 @@
         </div>
         <div class="modal-body">
             <!-- Formulário Comum -->
-            <form th:action="@{${tarefa == null} ? '/user/' + ${user_id} + '/repositories/' + ${repo_name} + '/tasks/new' : '/user/' + ${user_id} + '/repositories/' + ${repo_name} + '/tasks/' + ${tarefa.id} + '/edit'}"
+            <form th:action="@{${tarefa == null} ? '/user/' + ${user.id} + '/repositories/' + ${repo_name} + '/tasks/new' : '/user/' + ${user} + '/repositories/' + ${repo_name} + '/tasks/' + ${tarefa.id} + '/edit'}"
                 method="POST" class="row g-3 needs-validation">
 
                 <div class="col-md-6">

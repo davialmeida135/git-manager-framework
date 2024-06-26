@@ -5,7 +5,7 @@
 
     <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
 
-        <div th:replace="~{fragments/general.html :: header_fragments('')}"></div>
+        <div th:replace="~{fragments/general.html :: header_fragments('', '')}"></div>
 
         <div class="container error-container cover-container d-flex w-100 h-100 p-3 mx-auto flex-column justify-content-center align-items-center">
             <div class="row justify-content-center">
@@ -20,6 +20,7 @@
                 <div class="col-md-8">
                     <div class="alert alert-danger" role="alert" th:if="${errorMessage}">
                         <strong th:text="${errorMessage}">Mensagem de erro amigável</strong>
+                        <strong th:if="${param.errorMessage}" th:text="${#url.decode(param.errorMessage)}">Mensagem de erro amigável</strong>
                         <hr>
                         <p class="mb-0" th:text="'Detalhes do erro: ' + ${errorDetails}">Detalhes do erro para
                             desenvolvedores.</p>

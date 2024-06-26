@@ -1,0 +1,33 @@
+<!-- Container principal -->
+<div th:fragment="error-block" class="container">
+    <!-- Mensagem de erro (inicialmente invisível) -->
+    <div class="alert alert-danger error-notification d-none" role="alert">
+        <!-- Exibe a mensagem de erro recebida como parâmetro -->
+        <span th:text="${errorMessage}"></span>
+    </div>
+</div>
+
+<!-- Incluir jQuery e Toastr JS -->
+<script th:fragment="jquery-script" src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script th:fragment="toastr-script" src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/toastr.min.js"></script>
+
+<!-- Script para exibir notificação após o carregamento da página -->
+<script th:fragment="error-notification-script">
+    $(document).ready(function() {
+        // Mostrar a notificação de erro após 1 segundo
+        setTimeout(function() {
+            // Configuração da notificação
+            toastr.options = {
+                closeButton: true, // Mostra botão de fechar
+                progressBar: true, // Mostra barra de progresso
+                positionClass: 'toast-top-right', // Posição da notificação
+                showDuration: '300', // Duração da animação de mostrar
+                hideDuration: '1000', // Duração da animação de esconder
+                timeOut: '5000' // Tempo em milissegundos antes de fechar automaticamente
+            };
+
+            // Exibir a notificação de erro
+            toastr.error('${errorMessage}');
+        }, 1000);
+    });
+</script>

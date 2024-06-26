@@ -29,6 +29,6 @@ public interface GitService {
     String getUserId(OAuth2AuthenticationToken authenticationToken, OAuth2AuthorizedClientService oauth2AuthorizedClientService)throws IOException ;
     boolean isAuthenticated(OAuth2AuthenticationToken authenticationToken);
     boolean validateUser(UsuarioModel loggedUser, String userId)throws BusinessException;
-
-
+    void removeAccessToken(OAuth2AuthenticationToken authenticationToken,
+            OAuth2AuthorizedClientService oauth2AuthorizedClientService);
 }

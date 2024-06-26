@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
+import org.springframework.security.oauth2.core.OAuth2RefreshToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,7 +54,7 @@ public class UserController {
 
         try {
             int userIdInt = Integer.parseInt(userId);
-            model.addAttribute("user_id", userId);
+            model.addAttribute("user", userId);
             Iterable<Tarefa> tasks_list_byUser = colaboradorService.findTasksByIDUser(userIdInt, tarefaService);
 
             List<Tarefa> tasks = new ArrayList<>();
@@ -85,5 +87,15 @@ public class UserController {
         }
 
         return "user";
+    }
+
+    @GetMapping("/logout")
+    public String logout(OAuth2AuthenticationToken authenticationToken) {
+        if (authenticationToken != null) {
+            gitService.removeAccessToken(authenticationToken, oauth2AuthorizedClientService);
+            oauth2AuthorizedClientService.removeAuthorizedClient("eab0701da41462780733", authenticationToken.getName());
+        }
+
+        return "redirect:/";
     }
 }

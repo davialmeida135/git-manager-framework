@@ -56,8 +56,8 @@ public class ProjectController {
             return "redirect:/home";
         }
 
+        model.addAttribute("user", userId);
         model.addAttribute("objeto_da_lista", "Projects");
-
         model.addAttribute("repositories", projects);
 
         return "repositories";

@@ -13,7 +13,7 @@
                     <p style="min-width: 100%; min-height: 1.25rem;" class="card-text d-block text-muted pb-1"
                         th:text="${repository.description} ? ${repository.description} : '(Sem descrição)'">
                     </p>
-                    <a th:href="@{'/user/' + ${user_id} + '/repositories/' + ${repository.name}}"
+                    <a th:href="@{'/user/' + ${user} + '/repositories/' + ${repository.name}}"
                         class="btn btn-primary stretched-link d-block mx-auto">Quero
                         acessar!</a>
                 </div>

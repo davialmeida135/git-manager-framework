@@ -66,7 +66,7 @@ public class TarefaController {
         String accessToken = gitService.getAccessToken(authenticationToken,  oauth2AuthorizedClientService);
 
         model.addAttribute("error", errorMessage);
-        model.addAttribute("user_id", user_id);
+        model.addAttribute("user", user_id);
             
         try {
             Map<Tarefa, Projeto> tarefaProjetoMap = new HashMap<>();
@@ -102,7 +102,7 @@ public class TarefaController {
             Tarefa tarefaEscolhida = tarefaService.find(tarefa_id);
             model.addAttribute("tarefa", tarefaEscolhida);
             model.addAttribute("repoName", repoName);
-            model.addAttribute("user_id", user_id);
+            model.addAttribute("user", user_id);
 
             List<String> collaboratorUsernames = tarefaService.getCollaboratorsUsernames(tarefaEscolhida);
             model.addAttribute("usernames", collaboratorUsernames);
@@ -156,10 +156,11 @@ public class TarefaController {
     }
 
     @GetMapping("/{tarefa_id}/comments")
-    public String getComentarios(OAuth2AuthenticationToken authenticationToken,Model model, @PathVariable("tarefa_id") String tarefaId) {
+    public String getComentarios(OAuth2AuthenticationToken authenticationToken,Model model, @PathVariable("tarefa_id") String tarefaId, @PathVariable("user_id") String user_id) {
 
         Collection<ComentarioModel> comentarios = comentarioService.getComentarioTarefa(Integer.parseInt(tarefaId));
         model.addAttribute("comentarios", comentarios);
+        model.addAttribute("user", user_id);
 
         return "comentarios";
     }

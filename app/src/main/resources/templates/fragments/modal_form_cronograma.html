@@ -8,7 +8,7 @@
         </div>
         <div class="modal-body">
             <!-- Your form content goes here -->
-            <form th:action="@{'/user/' + ${user_id} + '/repositories/' + ${repo_name} + '/cronograma/new'}" method="POST"
+            <form th:action="@{'/user/' + ${user} + '/repositories/' + ${repo_name} + '/cronograma/new'}" method="POST"
                 class="row g-3 needs-validation">
                 <div class="col-md-6 ">
                     <label for="nome" class="form-label">Nome</label>
