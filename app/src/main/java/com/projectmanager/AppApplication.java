@@ -4,61 +4,91 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 
-
-
-import com.projectmanager.service.FeedbackService;
-
+import com.projectmanager.entities.Usuario;
+import com.projectmanager.model.UsuarioModel;
+import com.projectmanager.service.GitService;
+import com.projectmanager.service.GitlabService;
 
 @SpringBootApplication()
 
 public class AppApplication implements CommandLineRunner{
+    @Autowired
+    GitlabService gitlabService;
 
 	@Autowired
-	FeedbackService feedbackService;
+    private ApplicationContext context;
 	public static void main(String[] args) {
 		SpringApplication.run(AppApplication.class, args);
 	}
-//oi
-	//Teste para verificar integração com o BD
-	@Override
-	public void run(String... args) throws Exception {
-		//Demo1();
-	}
-
-	/*
-	private void Demo1(){
-		for(Feedback feedback : feedbackService.findAll()){
-			System.out.println("id: "+ feedback.getId());
-			System.out.println("Criador: "+feedback.getEscritor());
-			System.out.println("Mensagem: "+feedback.getComentario());
-			System.out.println("Id destinatario: "+feedback.getDestinatario());
-		}
-	}
 	
-	private void Demo2(){
-		Comentario comentario = comentarioService.find(600);
-		System.out.println("comentario: "+ comentario.getComentario());
-	}
+	// Teste para verificar integração com o BD
+    @Override
+    public void run(String... args) throws Exception {
+        System.out.println("TESTE AQUI:");
+		GitlabService gitlabService = new GitlabService();
+		gitlabService.getUsuario("glpat-Q8XDKFyEryzcU-8bczc5");
+        // TesteGetUsuarioModel();
+        // testGetAccessToken(context);
+    }
 
+	// private static void testGetAccessToken(ApplicationContext context) {
+    //     GitlabService gitlabService = context.getBean(GitlabService.class);
 
-	private void Demo3(){
-		Tarefa tarefa = new Tarefa();
-		tarefa.setTitulo("Linda");
-		tarefa.setId(0);
-		tarefa.setDescricao("sou linda");
-		tarefaService.save(tarefa, 56931444);
+    //     // Criação de um OAuth2AuthenticationToken de exemplo para teste
+    //     OAuth2AuthenticationToken authentication = createTestAuthenticationToken();
 
-		System.out.println("Feito!");
-	}
-	
-	private void Demo4(){
-		try {
-			comentarioService.delete(2);
-			System.out.println("Excluido.");
-		} catch (Exception e) {
-			System.out.println("Não excluiu");
-		}
-	}
-	*/
+    //     // Chamada do método getAccessToken
+    //     try {
+    //         String accessToken = gitlabService.getAccessToken(authentication);
+    //         System.out.println("Access Token: " + accessToken);
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     }
+    // }
+
+	// private static OAuth2AuthenticationToken createTestAuthenticationToken() {
+    //     // Aqui você cria um token de autenticação fictício para fins de teste
+    //     // Esta é uma simulação, e em um ambiente real você deve obter um token válido.
+    //     return new OAuth2AuthenticationToken(null, null, "gitlab");
+    // }
+
+    // // Método de teste para verificar a obtenção de dados do usuário no GitLab
+    // public void TesteGetUsuarioModel() {
+    //     String accessToken = "glpat-Q8XDKFyEryzcU-8bczc5";
+    //     try {
+    //         UsuarioModel usuarioModel = gitlabService.getUsuarioModel(accessToken);
+    //         if (usuarioModel != null) {
+    //             System.out.println("Usuário obtido do GitLab:");
+    //             System.out.println("ID: " + usuarioModel.getId());
+    //             System.out.println("Nome: " + usuarioModel.getFirstName());
+    //             System.out.println("Username: " + usuarioModel.getUsername());
+    //             System.out.println("Email: " + usuarioModel.getEmail());
+    //             System.out.println("Token de Acesso: " + usuarioModel.getToken());
+    //         } else {
+    //             System.out.println("Não foi possível obter o usuário do GitLab.");
+    //         }
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     }
+    // }
+
+	// public void testeGetUsuario() {
+    //     String accessToken = "glpat-Q8XDKFyEryzcU-8bczc5";
+    //     try {
+    //         Usuario usuario = gitlabService.getUsuario(accessToken);
+    //         if (usuario != null) {
+    //             System.out.println("Usuário obtido do GitLab:");
+    //             System.out.println("ID: " + usuario.getId());
+    //             System.out.println("Nome: " + usuario.getName());
+    //             System.out.println("Username: " + usuario.getUsername());
+    //         } else {
+    //             System.out.println("Não foi possível obter o usuário do GitLab.");
+    //         }
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     }
+    // }
 }

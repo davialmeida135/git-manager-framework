@@ -108,18 +108,21 @@ public class HomeController {
 
     private String processAuthenticatedUser(Model model, OAuth2AuthenticationToken authenticationToken) {
         if (!gitService.isAuthenticated(authenticationToken)) {
-            // Usuário não autenticado, faça o que for necessário (por exemplo, redirecionar para página de login)
+            // Usuário não autenticado
             return "redirect:/";
         }
         String accessToken = gitService.getAccessToken(authenticationToken, oauth2AuthorizedClientService);
         try {
+            System.out.println("AQUIII" + accessToken);
             Usuario usuario = gitService.getUsuario(accessToken);
+            System.out.println("AQUIII");
             usuarioService.save(usuario);
 
             return "redirect:/user/" + Integer.toString(usuario.getId());
         } catch (IOException e) {
             model.addAttribute("errorMessage", "Erro ao processar usuário autenticado: " + e.getMessage());
             model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
+            System.out.println(e.getMessage());
             return "error";
         }
     }

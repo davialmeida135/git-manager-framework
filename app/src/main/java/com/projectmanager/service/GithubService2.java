@@ -1,3 +1,4 @@
+/*
 package com.projectmanager.service;
 
 import java.io.IOException;
@@ -228,3 +229,4 @@ public class GithubService2 implements GitService {
         oauth2AuthorizedClientService.removeAuthorizedClient(clientRegistrationId, authenticationToken.getName());
     }
 }
+*/
