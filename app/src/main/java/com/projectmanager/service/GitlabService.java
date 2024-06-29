@@ -7,6 +7,7 @@ import java.util.Set;
 import org.aspectj.lang.annotation.Before;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
+import org.gitlab4j.api.Constants.TokenType;
 import org.gitlab4j.api.UserApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.User;
@@ -35,12 +36,15 @@ public class GitlabService implements GitService {
     }
 
     // @BeforeAll
-    public void initializeGitLabApi(String accessToken) {
-        this.gitLabApi = new GitLabApi(GitLabApi.ApiVersion.V4, "https://gitlab.com", accessToken);
+    private void initializeGitLabApi(String accessToken) {
+        String gitLabUrl = "https://gitlab.com";
+        this.gitLabApi = new GitLabApi(gitLabUrl,TokenType.OAUTH2_ACCESS,accessToken);
+        System.out.println("API inicializada com o access token: " + accessToken);
     }
 
-    public GitlabService(String gitlabHostUrl, String personalAccessToken) {
-        this.gitLabApi = new GitLabApi(GitLabApi.ApiVersion.V4, gitlabHostUrl, personalAccessToken);
+    public GitlabService(String gitlabHostUrl, String accessToken) {
+        String gitLabUrl = "https://gitlab.com";
+        this.gitLabApi = new GitLabApi(gitLabUrl,TokenType.OAUTH2_ACCESS,accessToken);
     }
 
     @Override
@@ -58,16 +62,21 @@ public class GitlabService implements GitService {
             }
             
             if (!gitLabApi.getAuthToken().equals("")) {
-                System.out.println("AQUII " + gitLabApi.getAuthToken());
+                System.out.println("AQUII1 " + gitLabApi.getAuthToken() + gitLabApi.getSecretToken());
+                
+                System.out.println(gitLabApi.getProjectApi().getOwnedProjects());
+                System.out.println("AQUII1.5");
+
                 User gitLabUser = gitLabApi.getUserApi().getCurrentUser();
-                System.out.println("AQUII");
+                System.out.println("AQUII2");
 
                 Long userId = gitLabUser.getId();
-                System.out.println("AQUII");
+                System.out.println("AQUII3");
+
 
                 // Chama a API para obter informações detalhadas do usuário pelo ID
                 User detailedUser = gitLabApi.getUserApi().getUser(userId);
-                System.out.println("AQUII");
+                System.out.println("AQUII4");
 
                 // Cria um objeto Usuario com os dados obtidos
                 Usuario usuario = new Usuario();
@@ -75,6 +84,7 @@ public class GitlabService implements GitService {
                 usuario.setId(detailedUser.getId().intValue());
                 usuario.setName(detailedUser.getName());
                 usuario.setUsername(detailedUser.getUsername());
+                System.out.println(usuario.toString());
 
                 return usuario;
             } else {
@@ -84,6 +94,7 @@ public class GitlabService implements GitService {
             // Adicione os demais campos desejados conforme necessário
         } catch (GitLabApiException e) {
             // Re-lança a exceção como IOException
+            System.out.println(e.getMessage());
             throw new IOException("Erro ao obter informações do usuário do GitLab", e);
         }
     }
@@ -138,6 +149,7 @@ public class GitlabService implements GitService {
             if (accessToken != null) {
                 System.out.println("hey " + accessToken.getTokenValue());
                 initializeGitLabApi(accessToken.getTokenValue());
+                
                 return accessToken.getTokenValue();
             } else {
                 System.out.println("Access token is missing for client: " + clientRegistrationId);

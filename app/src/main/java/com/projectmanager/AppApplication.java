@@ -27,9 +27,9 @@ public class AppApplication implements CommandLineRunner{
 	// Teste para verificar integração com o BD
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("TESTE AQUI:");
-		GitlabService gitlabService = new GitlabService();
-		gitlabService.getUsuario("glpat-Q8XDKFyEryzcU-8bczc5");
+        //System.out.println("TESTE AQUI:");
+		//GitlabService gitlabService = new GitlabService();
+		//gitlabService.getUsuario("glpat-Q8XDKFyEryzcU-8bczc5");
         // TesteGetUsuarioModel();
         // testGetAccessToken(context);
     }
