@@ -27,4 +27,9 @@ public class TarefaGitHub extends Tarefa{
     public boolean isGithubTarefa() {
         return true;
     }
+
+    @Override
+    public boolean isGitlabTarefa() {
+        return false;
+    }
 }

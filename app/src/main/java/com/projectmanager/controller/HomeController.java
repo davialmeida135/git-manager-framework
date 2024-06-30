@@ -14,15 +14,15 @@ import com.projectmanager.config.Global;
 import com.projectmanager.entities.Usuario;
 import com.projectmanager.model.UsuarioModel;
 import com.projectmanager.service.GitService;
-
+import com.projectmanager.service.GitlabService;
 import com.projectmanager.service.UsuarioService;
 
 @Controller
 public class HomeController {
 
     @Autowired
-    @Qualifier(Global.GitClass)
-    private GitService gitService; // Injete o serviço que obtém os repositórios do GitHub
+    @Qualifier(Global.gitClass)
+GitService gitService; // Injete o serviço que obtém os repositórios do GitHub
 
     @Autowired
     private OAuth2AuthorizedClientService oauth2AuthorizedClientService; // Injete o serviço de cliente autorizado
@@ -113,9 +113,7 @@ public class HomeController {
         }
         String accessToken = gitService.getAccessToken(authenticationToken, oauth2AuthorizedClientService);
         try {
-            System.out.println("AQUIII" + accessToken);
             Usuario usuario = gitService.getUsuario(accessToken);
-            System.out.println("AQUIII");
             usuarioService.save(usuario);
 
             return "redirect:/user/" + Integer.toString(usuario.getId());

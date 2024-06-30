@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.stereotype.Service;
 
 import com.projectmanager.entities.Usuario;
 import com.projectmanager.exceptions.BusinessException;

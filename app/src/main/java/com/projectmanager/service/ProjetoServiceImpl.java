@@ -24,12 +24,13 @@ import com.projectmanager.repositories.ProjetoRepository;
 @Service("ProjetoService")
 public class ProjetoServiceImpl implements ProjetoService {
     @Autowired
-    @Qualifier(Global.GitClass)
-    private GitService gitService; // Injete o serviço que obtém os repositórios do GitHub
+    @Qualifier(Global.gitClass)
+GitService gitService; // Injete o serviço que obtém os repositórios do GitHub
 
     @Autowired
     ProjetoRepository projetoRepository;
     @Autowired
+    @Qualifier("TarefaGitlabService")
     TarefaServiceAbs tarefaService;
     @Autowired
     CronogramaService cronogramaService;

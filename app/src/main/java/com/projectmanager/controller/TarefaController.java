@@ -34,7 +34,7 @@ import com.projectmanager.model.RepositoryModel;
 import com.projectmanager.model.UsuarioModel;
 import com.projectmanager.service.ComentarioService;
 import com.projectmanager.service.GitService;
-
+import com.projectmanager.service.GitlabService;
 import com.projectmanager.service.ProjetoService;
 import com.projectmanager.service.TarefaServiceAbs;
 
@@ -44,13 +44,14 @@ import com.projectmanager.service.TarefaServiceAbs;
 public class TarefaController {
 
     @Autowired
-    @Qualifier(Global.GitClass)
-    private GitService gitService; // Injete o serviço que obtém os repositórios do GitHub
+    @Qualifier(Global.gitClass)
+GitService gitService; // Injete o serviço que obtém os repositórios do GitHub
 
     @Autowired
     private OAuth2AuthorizedClientService oauth2AuthorizedClientService;
 
     @Autowired
+    @Qualifier("TarefaGitlabService")
     TarefaServiceAbs tarefaService;
 
     @Autowired

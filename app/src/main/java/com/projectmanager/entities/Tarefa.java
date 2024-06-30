@@ -77,4 +77,9 @@ public class Tarefa extends ScheduledActivity{
     public boolean isGithubTarefa() {
         return false;
     }
+
+    @Override
+    public boolean isGitlabTarefa() {
+        return false;
+    }
 }

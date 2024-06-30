@@ -24,15 +24,16 @@ import com.projectmanager.entities.Tarefa;
 import com.projectmanager.model.RepositoryModel;
 import com.projectmanager.service.ColaboradorService;
 import com.projectmanager.service.GitService;
-
+import com.projectmanager.service.GitlabService;
 import com.projectmanager.service.ProjetoService;
 import com.projectmanager.service.TarefaServiceAbs;
+import com.projectmanager.service.TaskSortingStrategy;
 
 @Controller
 public class UserController {
 
     @Autowired
-    @Qualifier(Global.GitClass)
+    @Qualifier("GitlabService")
     private GitService gitService; // Injete o serviço que obtém os repositórios do GitHub
 
     @Autowired
@@ -45,6 +46,7 @@ public class UserController {
     ProjetoService projetoService;
 
     @Autowired
+    @Qualifier("TarefaGitlabService")
     TarefaServiceAbs tarefaService;
 
     @GetMapping("/user/{user_id}")
@@ -60,6 +62,8 @@ public class UserController {
             List<Tarefa> tasks = new ArrayList<>();
             tasks_list_byUser.forEach(tasks::add);
 
+            System.out.println("Tarefas antes de ordenação e adição ao modelo:");
+            tasks.forEach(System.out::println);
             tasks = colaboradorService.sortTasks(tasks);
 
             Map<Tarefa, Projeto> tarefaProjetoMap = new HashMap<>();
@@ -69,6 +73,9 @@ public class UserController {
             }
 
             model.addAttribute("tarefaProjetoMap", tarefaProjetoMap);
+
+            System.out.println("Tarefas antes da adição ao modelo:");
+            tasks.forEach(System.out::println);
             model.addAttribute("tarefas", tasks);
 
             List<RepositoryModel> repositories = gitService.getRepositories(accessToken);
