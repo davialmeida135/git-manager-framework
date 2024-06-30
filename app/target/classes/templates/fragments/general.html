@@ -55,10 +55,9 @@
 
 <body>
 
-  <header th:fragment="header_fragments(activePage, user_id)" class="mb-auto mt-0">
-    <div>
-      <h3 class="float-md-start mb-0">Project Manager</h3>
-      <nav class="nav nav-masthead justify-content-center float-md-end">
+  <header th:fragment="header_fragments(activePage, user_id)" class="mb-auto mt-0 d-flex justify-content-between align-items-center">
+    <h3 class="mb-0">Project Manager</h3>
+    <nav class="nav nav-masthead">
         <a class="nav-link fw-bold py-1 px-3" th:classappend="${#strings.equals(activePage,'Home')} ? 'active' : ''"
           href="/">Home</a>
         <!-- Lógica para usuário logado -->
@@ -74,9 +73,9 @@
         <th:block th:if="${user_id != null}">
           <a class="nav-link fw-bold py-1 px-3 nav-link-logout" href="/logout">Sair</a>
         </th:block>
-      </nav>
-    </div>
-  </header>
+    </nav>
+</header>
+
 
   <!-- Fragmento para incluir jQuery -->
   <script th:fragment="jquery-script" src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
