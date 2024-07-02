@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -62,11 +63,11 @@ public class UserController {
             List<Tarefa> tasks = new ArrayList<>();
             tasks_list_byUser.forEach(tasks::add);
 
-            System.out.println("Tarefas antes de ordenação e adição ao modelo:");
+            System.out.println("Tarefas antes de ordenação:");
             tasks.forEach(System.out::println);
             tasks = colaboradorService.sortTasks(tasks);
 
-            Map<Tarefa, Projeto> tarefaProjetoMap = new HashMap<>();
+            Map<Tarefa, Projeto> tarefaProjetoMap = new LinkedHashMap<>();
             for (Tarefa tarefa : tasks) {
                 Projeto projeto = projetoService.find(tarefa.getId_projeto());
                 tarefaProjetoMap.put(tarefa, projeto);
@@ -74,7 +75,7 @@ public class UserController {
 
             model.addAttribute("tarefaProjetoMap", tarefaProjetoMap);
 
-            System.out.println("Tarefas antes da adição ao modelo:");
+            System.out.println("Tarefas depois de ordenação:");
             tasks.forEach(System.out::println);
             model.addAttribute("tarefas", tasks);
 
