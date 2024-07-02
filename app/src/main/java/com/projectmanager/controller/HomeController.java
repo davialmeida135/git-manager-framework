@@ -22,7 +22,7 @@ public class HomeController {
 
     @Autowired
     @Qualifier(Global.gitClass)
-GitService gitService; // Injete o serviço que obtém os repositórios do GitHub
+GitService gitService; // Injete o serviço que obtém os repositórios do Git
 
     @Autowired
     private OAuth2AuthorizedClientService oauth2AuthorizedClientService; // Injete o serviço de cliente autorizado

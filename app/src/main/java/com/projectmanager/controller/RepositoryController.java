@@ -44,7 +44,7 @@ public class RepositoryController {
 
     @Autowired
     @Qualifier(Global.gitClass)
-GitService gitService; // Injete o serviço que obtém os repositórios do GitHub
+GitService gitService; // Injete o serviço que obtém os repositórios do Git
 
     @Autowired
     private OAuth2AuthorizedClientService oauth2AuthorizedClientService;
@@ -64,7 +64,7 @@ GitService gitService; // Injete o serviço que obtém os repositórios do GitHu
             OAuth2AuthenticationToken authenticationToken, Model model) {
         String accessToken = gitService.getAccessToken(authenticationToken, oauth2AuthorizedClientService);
 
-        // Obter todos os repositórios do usuário no GitHub
+        // Obter todos os repositórios do usuário no Git
         try {
             UsuarioModel loggedUser = gitService.getUsuarioModel(accessToken);
 
