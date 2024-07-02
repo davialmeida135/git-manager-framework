@@ -45,7 +45,7 @@ public class PrioritySortingStrategy implements TaskSortingStrategy {
 
         Comparator<TarefaGitlab> comparator = Comparator
                 .comparing(prazoConverter)
-                .thenComparing(Comparator.comparingInt(TarefaGitlab::getPriority).reversed());
+                .thenComparing(Comparator.comparingInt(TarefaGitlab::getPrioridadeValor).reversed());
 
         // Filtra e ordena a lista
         List<TarefaGitlab> sortedTasks = tasks.stream()

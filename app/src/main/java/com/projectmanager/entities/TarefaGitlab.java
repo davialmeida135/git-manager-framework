@@ -37,7 +37,7 @@ public class TarefaGitlab extends Tarefa {
         this.prioridade = prioridade;
     }
 
-    public int getPriority() {
+    public int getPrioridadeValor() {
         switch (prioridade) {
             case "BAIXA":
                 return 1;
