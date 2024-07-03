@@ -30,20 +30,6 @@
                         th:text="${tarefa != null ? tarefa.descricao : ''}"></textarea>
                 </div>
 
-                <div class="col-12">
-                    <label for="conhecimentos" class="form-label">Conhecimentos Necessários</label>
-                    <textarea class="form-control" id="conhecimentos" name="conhecimentos"
-                        placeholder="Quais conhecimentos são necessários?"
-                        th:text="${tarefa != null && tarefa.isGithubTarefa() ? tarefa.conhecimentos : '' }"></textarea>
-                </div>
-
-                <div class="col-12">
-                    <label for="referencias" class="form-label">Referências</label>
-                    <textarea class="form-control" id="referencias" name="referencias"
-                        placeholder="Adicione referências relevantes"
-                        th:text="${tarefa != null && tarefa.isGithubTarefa() ? tarefa.referencias : ''}"></textarea>
-                </div>
-
                 <div class="col-md-4">
                     <label for="supervisor" class="form-label">Supervisor Responsável</label>
                     <input type="text" class="form-control" id="supervisor" name="supervisorResponsavel"

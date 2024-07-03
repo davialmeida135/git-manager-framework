@@ -175,4 +175,10 @@ public abstract class TarefaServiceAbs {
 
         return tarefa;
     }
+
+    public void completarTarefa(int id){
+        Tarefa tarefa = find(id);
+        tarefa.setCompleta(true);
+        tarefaRepository.save(tarefa);
+    }
 }

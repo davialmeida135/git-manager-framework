@@ -13,6 +13,7 @@
                     <h5 class="card-title" th:text="${entry.key.titulo}"></h5>
                     <p class="card-text" th:text="${entry.key.descricao}" style="max-height: 2em; overflow: hidden;">
                     </p>
+                    
                     <div class="tags">
                         <small>Colaborador(es):</small>
                         <ul class="m-0 p-0">
@@ -23,6 +24,10 @@
                     </div>
                     <a th:href="@{'/user/' + ${user} + '/repositories/' + ${entry.value.nome} + '/tasks/' + ${entry.key.id}}"
                         class="btn btn-primary stretched-link d-block mx-auto mt-2">Ver</a>
+                    <p class="card-text" th:text="PRIORIDADE" style="max-height: 2em; overflow: hidden;">
+                    </p>
+                    <p class="card-text" th:text="${entry.key.prioridade}" style="max-height: 2em; overflow: hidden;">
+                    </p>
                     <!-- <button type="button" class="btn btn-primary me-3" data-bs-toggle="modal"
                         data-bs-target="#modalEditTask">
                         Editar
