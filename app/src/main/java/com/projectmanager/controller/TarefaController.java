@@ -5,9 +5,11 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+
 import java.util.Collection;
 import java.util.HashMap;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -38,14 +40,13 @@ import com.projectmanager.service.GitlabService;
 import com.projectmanager.service.ProjetoService;
 import com.projectmanager.service.TarefaServiceAbs;
 
-
 @Controller
 @RequestMapping("/user/{user_id}/repositories/{repo_name}/tasks")
 public class TarefaController {
 
     @Autowired
     @Qualifier(Global.gitClass)
-GitService gitService; // Injete o serviço que obtém os repositórios do Git
+    GitService gitService; // Injete o serviço que obtém os repositórios do Git
 
     @Autowired
     private OAuth2AuthorizedClientService oauth2AuthorizedClientService;
@@ -64,11 +65,11 @@ GitService gitService; // Injete o serviço que obtém os repositórios do Git
     public String getUserTarefas(Model model, @PathVariable("repo_name") String repoName,
             @PathVariable("user_id") String user_id, OAuth2AuthenticationToken authenticationToken,
             @RequestParam(value = "error", required = false) String errorMessage) {
-        String accessToken = gitService.getAccessToken(authenticationToken,  oauth2AuthorizedClientService);
+        String accessToken = gitService.getAccessToken(authenticationToken, oauth2AuthorizedClientService);
 
         model.addAttribute("error", errorMessage);
         model.addAttribute("user", user_id);
-            
+
         try {
             Map<Tarefa, Projeto> tarefaProjetoMap = new HashMap<>();
             UsuarioModel loggedUser = gitService.getUsuarioModel(accessToken); // Objeto do usuario
@@ -88,8 +89,10 @@ GitService gitService; // Injete o serviço que obtém os repositórios do Git
             model.addAttribute("errorMessage", "Falha ao conectar ao serviço de repositório." + e.getMessage());
             model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
-        } catch (BusinessException e){
-            model.addAttribute("errorMessage", "Erro ao buscar as tarefas. Verifique se possui permissão para acessar este repositório." + e.getMessage());
+        } catch (BusinessException e) {
+            model.addAttribute("errorMessage",
+                    "Erro ao buscar as tarefas. Verifique se possui permissão para acessar este repositório."
+                            + e.getMessage());
             model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
         }
@@ -135,11 +138,13 @@ GitService gitService; // Injete o serviço que obtém os repositórios do Git
             model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
         } catch (DateTimeParseException e) {
-            model.addAttribute("errorMessage", "Formato de data e hora inválido. Verifique o formato da data informada." + e.getMessage());
+            model.addAttribute("errorMessage",
+                    "Formato de data e hora inválido. Verifique o formato da data informada." + e.getMessage());
             model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
         } catch (NumberFormatException e) {
-            model.addAttribute("errorMessage", "Valor numérico inválido. Verifique os dados inseridos." + e.getMessage());
+            model.addAttribute("errorMessage",
+                    "Valor numérico inválido. Verifique os dados inseridos." + e.getMessage());
             model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
         } catch (BusinessException e) {
@@ -147,7 +152,8 @@ GitService gitService; // Injete o serviço que obtém os repositórios do Git
                     + e.getMessage();
             return redirect;
         } catch (PermissionDeniedDataAccessException e) {
-            model.addAttribute("errorMessage", "Acesso negado. Você não possui permissão para criar tarefas neste repositório.." + e.getMessage());
+            model.addAttribute("errorMessage",
+                    "Acesso negado. Você não possui permissão para criar tarefas neste repositório.." + e.getMessage());
             model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
         }
@@ -157,7 +163,8 @@ GitService gitService; // Injete o serviço que obtém os repositórios do Git
     }
 
     @GetMapping("/{tarefa_id}/comments")
-    public String getComentarios(OAuth2AuthenticationToken authenticationToken,Model model, @PathVariable("tarefa_id") String tarefaId, @PathVariable("user_id") String user_id) {
+    public String getComentarios(OAuth2AuthenticationToken authenticationToken, Model model,
+            @PathVariable("tarefa_id") String tarefaId, @PathVariable("user_id") String user_id) {
 
         Collection<ComentarioModel> comentarios = comentarioService.getComentarioTarefa(Integer.parseInt(tarefaId));
         model.addAttribute("comentarios", comentarios);
@@ -192,7 +199,6 @@ GitService gitService; // Injete o serviço que obtém os repositórios do Git
 
             UsuarioModel loggedUser = gitService.getUsuarioModel(accessToken); // Objeto do usuario
             gitService.validateUser(loggedUser, user_id);
-            
 
             tarefaService.edit(novaTarefa, id, repoName, accessToken);
         } catch (NumberFormatException e) {
@@ -200,10 +206,33 @@ GitService gitService; // Injete o serviço que obtém os repositórios do Git
             model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
         } catch (BusinessException e) {
-            model.addAttribute("errorMessage", "Erro ao editar a tarefa. Verifique os dados informados." + e.getMessage());
+            model.addAttribute("errorMessage",
+                    "Erro ao editar a tarefa. Verifique os dados informados." + e.getMessage());
             model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
             return "error";
         }
+
+        return "redirect:/user/" + user_id + "/repositories/" + repoName + "/tasks";
+    }
+
+    @PostMapping("/{tarefa_id}/complete")
+    public String completarTarefa(@PathVariable("user_id") String user_id,
+            @PathVariable("repo_name") String repoName,
+            @PathVariable("tarefa_id") String tarefaIdStr) {
+
+        int tarefaId = Integer.parseInt(tarefaIdStr);
+        tarefaService.completarTarefa(tarefaId);
+
+        return "redirect:/user/" + user_id + "/repositories/" + repoName + "/tasks";
+    }
+
+    @PostMapping("/{tarefa_id}/undoComplete")
+    public String desmarcarTarefa(@PathVariable("user_id") String user_id,
+            @PathVariable("repo_name") String repoName,
+            @PathVariable("tarefa_id") String tarefaIdStr) {
+
+        int tarefaId = Integer.parseInt(tarefaIdStr);
+        tarefaService.desmarcarTarefa(tarefaId);
 
         return "redirect:/user/" + user_id + "/repositories/" + repoName + "/tasks";
     }

@@ -181,4 +181,10 @@ public abstract class TarefaServiceAbs {
         tarefa.setCompleta(true);
         tarefaRepository.save(tarefa);
     }
+
+    public void desmarcarTarefa(int id){
+        Tarefa tarefa = find(id);
+        tarefa.setCompleta(false);
+        tarefaRepository.save(tarefa);
+    }
 }

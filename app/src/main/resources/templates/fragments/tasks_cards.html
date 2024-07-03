@@ -4,30 +4,62 @@
             <div class="card mb-3 d-flex justify-content-center align-items-center"
                 th:each="entry : ${tarefaProjetoMap}">
                 <div class="card-body">
-                    <span class="badge bg-primary text-white mb-1">
-                        <span
-                            th:text="|${#strings.substring(entry.key.prazo, 8, 10)}/${#strings.substring(entry.key.prazo, 5, 7)}/${#strings.substring(entry.key.prazo, 0, 4)}|"></span>
-                    </span>
-                    <span th:if="${entry.key.completa}" class="position-absolute top-0 start-0 badge bg-success"
-                        style="font-size: 1rem;">✓</span>
-                    <h5 class="card-title" th:text="${entry.key.titulo}"></h5>
-                    <p class="card-text" th:text="${entry.key.descricao}" style="max-height: 2em; overflow: hidden;">
-                    </p>
-                    
-                    <div class="tags">
-                        <small>Colaborador(es):</small>
-                        <ul class="m-0 p-0">
-                            <li th:each="colaborador : ${entry.key.usuarios}" class="badge bg-primary text-white mr-1"
-                                th:text="${colaborador.username}">
-                            </li>
-                        </ul>
+                    <div>
+                        <span class="badge bg-primary text-white mb-1">
+                            <span
+                                th:text="|${#strings.substring(entry.key.prazo, 8, 10)}/${#strings.substring(entry.key.prazo, 5, 7)}/${#strings.substring(entry.key.prazo, 0, 4)}|"></span>
+                        </span>
+
+                        <label class="form-check position-absolute top-0 start-0 m-3" style="z-index: 2;">
+                            <input class="form-check-input" type="checkbox" id="checkExample"
+                                th:checked="${entry.key.completa}" disabled  style="opacity: 1; cursor: not-allowed;"/>
+                        </label>
+
+                        <!-- Adicionando as estrelas de prioridade -->
+                        <div class="priority-icons position-absolute top-0 end-0 m-3" style="z-index: 2;">
+                            <span th:if="${entry.key.prioridade == 'BAIXA'}" title="Prioridade Baixa">
+                                <svg class="icon low-priority">
+                                    <use xlink:href="#star-fill"></use>
+                                </svg>
+                            </span>
+                            <span th:if="${entry.key.prioridade == 'MÉDIA'}" title="Prioridade Média">
+                                <svg class="icon medium-priority">
+                                    <use xlink:href="#star-fill"></use>
+                                </svg>
+                            </span>
+                            <span th:if="${entry.key.prioridade == 'ALTA'}" title="Prioridade Alta">
+                                <svg class="icon high-priority">
+                                    <use xlink:href="#star-fill"></use>
+                                </svg>
+                            </span>
+                        </div>
                     </div>
-                    <a th:href="@{'/user/' + ${user} + '/repositories/' + ${entry.value.nome} + '/tasks/' + ${entry.key.id}}"
-                        class="btn btn-primary stretched-link d-block mx-auto mt-2">Ver</a>
-                    <p class="card-text" th:text="PRIORIDADE" style="max-height: 2em; overflow: hidden;">
-                    </p>
-                    <p class="card-text" th:text="${entry.key.prioridade}" style="max-height: 2em; overflow: hidden;">
-                    </p>
+                    <div class="card-top">
+                        <h5 class="card-title" th:text="${entry.key.titulo}"></h5>
+                        <p class="card-text" th:text="${entry.key.descricao}"
+                            style="max-height: 2em; overflow: hidden;">
+                        </p>
+
+                        <div class="tags">
+                            <small>Colaborador(es):</small>
+                            <ul class="m-0 p-0">
+                                <li th:each="colaborador : ${entry.key.usuarios}"
+                                    class="badge bg-primary text-white mr-1" th:text="${colaborador.username}">
+                                </li>
+                            </ul>
+                        </div>
+
+                        <a th:href="@{'/user/' + ${user} + '/repositories/' + ${entry.value.nome} + '/tasks/' + ${entry.key.id}}"
+                            class="stretched-link"
+                            style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; z-index: 1;"></a>
+                    </div>
+
+                    <a th:if="${!entry.key.completa}" href="@{'/user/' + ${user} + '/repositories/' + ${entry.value.nome} + '/tasks/' + ${entry.key.id} + '/complete'}"
+                        class="btn btn-primary stretched-link d-block mx-auto mt-2" th:attr="onclick='event.preventDefault(); 
+                    var form = document.getElementById(\'form-finalizar-' + ${entry.key.id} + '\');
+                    form.submit();
+                    setTimeout(function() { window.history.back(); }, 100);'" style="z-index: 2; position: relative;">Finalizar</a>
+
                     <!-- <button type="button" class="btn btn-primary me-3" data-bs-toggle="modal"
                         data-bs-target="#modalEditTask">
                         Editar
@@ -35,6 +67,12 @@
                     <a th:href="@{'/user/' + ${user} + '/repositories/' + ${repository.name} + '/tasks/' + ${tarefa.id} + '/edit'}"
                         class="btn btn-primary stretched-link d-block mx-auto">Editar</a> -->
                 </div>
+                
+                <!-- Formulário oculto para enviar uma requisição POST -->
+                <form th:id="'form-finalizar-' + ${entry.key.id}"
+                    th:action="@{'/user/' + ${user} + '/repositories/' + ${entry.value.nome} + '/tasks/' + ${entry.key.id} + '/complete'}"
+                    method="post" style="display: none;">
+                </form>
             </div>
         </div>
     </div>

@@ -356,7 +356,6 @@ public class GitlabService implements GitService {
         if (client != null) {
             OAuth2AccessToken accessToken = client.getAccessToken();
             if (accessToken != null) {
-                System.out.println("hey " + accessToken.getTokenValue());
                 initializeGitLabApi(accessToken.getTokenValue());
 
                 return accessToken.getTokenValue();
