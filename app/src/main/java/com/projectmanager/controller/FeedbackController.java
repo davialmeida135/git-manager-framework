@@ -19,7 +19,6 @@ import com.projectmanager.entities.Usuario;
 import com.projectmanager.forms.FeedbackForm;
 import com.projectmanager.service.FeedbackService;
 import com.projectmanager.service.GitService;
-import com.projectmanager.service.GitlabService;
 import com.projectmanager.config.Global;
 
 @Controller

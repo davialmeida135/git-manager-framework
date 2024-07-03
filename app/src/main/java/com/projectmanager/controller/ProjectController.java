@@ -19,7 +19,6 @@ import com.projectmanager.config.Global;
 import com.projectmanager.model.RepositoryModel;
 import com.projectmanager.service.ColaboradorService;
 import com.projectmanager.service.GitService;
-import com.projectmanager.service.GitlabService;
 import com.projectmanager.service.ProjetoService;
 import com.projectmanager.service.TarefaServiceAbs;
 

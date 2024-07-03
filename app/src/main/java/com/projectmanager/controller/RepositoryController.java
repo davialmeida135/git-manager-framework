@@ -34,7 +34,6 @@ import com.projectmanager.model.UsuarioModel;
 import com.projectmanager.service.ColaboradorService;
 import com.projectmanager.service.CronogramaService;
 import com.projectmanager.service.GitService;
-import com.projectmanager.service.GitlabService;
 import com.projectmanager.service.ProjetoService;
 import com.projectmanager.service.TarefaServiceAbs;
 

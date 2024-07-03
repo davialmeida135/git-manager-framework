@@ -5,23 +5,15 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 
 import com.projectmanager.config.Global;
-import com.projectmanager.entities.Usuario;
-import com.projectmanager.model.UsuarioModel;
 import com.projectmanager.service.GitService;
-import com.projectmanager.service.GitlabService;
 
 @SpringBootApplication
 public class AppApplication implements CommandLineRunner {
     @Autowired
     @Qualifier(Global.gitClass)
     GitService gitService;
-
-    @Autowired
-    private ApplicationContext context;
 
     public static void main(String[] args) {
         SpringApplication.run(AppApplication.class, args);

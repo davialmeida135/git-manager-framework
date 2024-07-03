@@ -13,7 +13,6 @@ import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHUser;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
@@ -26,7 +25,6 @@ import com.projectmanager.exceptions.BusinessException;
 import com.projectmanager.model.IssueModel;
 import com.projectmanager.model.RepositoryModel;
 import com.projectmanager.model.UsuarioModel;
-import com.projectmanager.config.Global;
 
 @Service("GithubService")
 public class GithubService implements GitService {
@@ -44,8 +42,7 @@ public class GithubService implements GitService {
                     user.getName());
             return newUser;
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            return null;
+            throw new IOException("Erro ao obter dados do usuário do GitHub", e);
         }
 
     }
@@ -161,7 +158,7 @@ public class GithubService implements GitService {
             UsuarioModel loggedUser = getUsuarioModel(accessToken);
             return String.valueOf(loggedUser.getId());
         }
-        throw new PermissionDeniedDataAccessException("Usuário não autenticado", null);
+        throw new PermissionDeniedDataAccessException("Usuário não autenticado", new RuntimeException("Detalhes do erro"));
         // return null; // Retornar null ou algum valor padrão se o usuário não estiver
         // autenticado
     }

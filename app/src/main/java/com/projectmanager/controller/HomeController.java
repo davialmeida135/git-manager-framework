@@ -14,7 +14,6 @@ import com.projectmanager.config.Global;
 import com.projectmanager.entities.Usuario;
 import com.projectmanager.model.UsuarioModel;
 import com.projectmanager.service.GitService;
-import com.projectmanager.service.GitlabService;
 import com.projectmanager.service.UsuarioService;
 
 @Controller
@@ -52,8 +51,7 @@ GitService gitService; // Injete o serviço que obtém os repositórios do Git
         if (!gitService.isAuthenticated(authenticationToken)) {
             return "redirect:/";
         }
-
-        // TODO: alterar a rota
+        
         try {
             String userId = gitService.getUserId(authenticationToken, oauth2AuthorizedClientService);
             return "redirect:/user/" + userId + "/projects";

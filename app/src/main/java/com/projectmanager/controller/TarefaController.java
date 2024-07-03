@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -36,7 +34,6 @@ import com.projectmanager.model.RepositoryModel;
 import com.projectmanager.model.UsuarioModel;
 import com.projectmanager.service.ComentarioService;
 import com.projectmanager.service.GitService;
-import com.projectmanager.service.GitlabService;
 import com.projectmanager.service.ProjetoService;
 import com.projectmanager.service.TarefaServiceAbs;
 

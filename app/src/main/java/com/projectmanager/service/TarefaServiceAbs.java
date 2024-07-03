@@ -11,7 +11,6 @@ import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.PermissionDeniedDataAccessException;
-import org.springframework.stereotype.Service;
 
 import com.projectmanager.config.Global;
 import com.projectmanager.entities.Colaborador;
@@ -21,11 +20,7 @@ import com.projectmanager.entities.Usuario;
 import com.projectmanager.exceptions.BusinessException;
 import com.projectmanager.forms.TarefaForm;
 import com.projectmanager.model.IssueModel;
-import com.projectmanager.model.RepositoryModel;
-import com.projectmanager.model.UsuarioModel;
 import com.projectmanager.repositories.TarefaRepository;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public abstract class TarefaServiceAbs {

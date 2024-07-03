@@ -3,7 +3,6 @@ package com.projectmanager.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,23 +11,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.core.OAuth2AccessToken;
-import org.springframework.security.oauth2.core.OAuth2RefreshToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import com.projectmanager.config.Global;
 import com.projectmanager.entities.Projeto;
 import com.projectmanager.entities.Tarefa;
 import com.projectmanager.model.RepositoryModel;
 import com.projectmanager.service.ColaboradorService;
 import com.projectmanager.service.GitService;
-import com.projectmanager.service.GitlabService;
 import com.projectmanager.service.ProjetoService;
 import com.projectmanager.service.TarefaServiceAbs;
-import com.projectmanager.service.TaskSortingStrategy;
 
 @Controller
 public class UserController {

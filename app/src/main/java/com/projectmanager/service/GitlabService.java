@@ -8,19 +8,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.aspectj.lang.annotation.Before;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.Constants.TokenType;
-import org.gitlab4j.api.UserApi;
-import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Branch;
 import org.gitlab4j.api.models.Member;
 import org.gitlab4j.api.models.Owner;
 import org.gitlab4j.api.models.Project;
 import org.gitlab4j.api.models.User;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Primary;
 import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
@@ -28,7 +23,6 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.stereotype.Service;
 
-import com.projectmanager.config.Global;
 import com.projectmanager.entities.Usuario;
 import com.projectmanager.exceptions.BusinessException;
 import com.projectmanager.model.IssueModel;
@@ -377,7 +371,7 @@ public class GitlabService implements GitService {
             UsuarioModel loggedUser = getUsuarioModel(accessToken);
             return String.valueOf(loggedUser.getId());
         }
-        throw new PermissionDeniedDataAccessException("Usuário não autenticado", null);
+        throw new PermissionDeniedDataAccessException("Usuário não autenticado", new RuntimeException("Detalhes do erro"));
     }
 
     @Override
