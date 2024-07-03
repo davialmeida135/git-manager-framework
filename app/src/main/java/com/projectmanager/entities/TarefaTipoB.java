@@ -5,7 +5,7 @@ import jakarta.persistence.Entity;
 
 @Entity
 @DiscriminatorValue("GITLAB_TASK")
-public class TarefaGitlab extends Tarefa {
+public class TarefaTipoB extends Tarefa {
     String supervisorResponsavel;
     String tempoEstimado;
     String prioridade;

@@ -51,7 +51,7 @@ GitService gitService; // Injete o serviço que obtém os repositórios do GitHu
     private OAuth2AuthorizedClientService oauth2AuthorizedClientService;
 
     @Autowired
-    @Qualifier("TarefaGitlabService")
+    @Qualifier("TarefaTipoBService")
     TarefaServiceAbs tarefaService;
 
     @Autowired

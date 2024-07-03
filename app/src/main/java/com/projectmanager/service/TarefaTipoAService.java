@@ -4,17 +4,23 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.projectmanager.config.Global;
 import com.projectmanager.entities.Tarefa;
-import com.projectmanager.entities.TarefaGitlab;
+import com.projectmanager.entities.TarefaTipoA;
 import com.projectmanager.exceptions.BusinessException;
 import com.projectmanager.forms.TarefaForm;
 import com.projectmanager.model.RepositoryModel;
 import com.projectmanager.model.UsuarioModel;
 
-@Service("TarefaGitlabService")
-public class TarefaGitlabService extends TarefaServiceAbs {
+@Service("TarefaTipoAService")
+public class TarefaTipoAService extends TarefaServiceAbs {
+    @Autowired
+    @Qualifier(Global.gitClass)
+    private GitService gitService;
 
     @Override
     public Tarefa validateCustomTarefa(Tarefa tarefa) throws BusinessException {
@@ -29,13 +35,14 @@ public class TarefaGitlabService extends TarefaServiceAbs {
 
     @Override
     public Tarefa instantiateTarefa() {
-        return new TarefaGitlab();
+        Tarefa newTarefa = new TarefaTipoA();
+        return newTarefa;
     }
 
     @Override
     public Tarefa formToTarefa(TarefaForm tarefaForm, String repoName, String accessToken)
             throws BusinessException, IOException {
-        TarefaGitlab newTarefa = new TarefaGitlab();
+        TarefaTipoA newTarefa = new TarefaTipoA();
         newTarefa.setTitulo(tarefaForm.getTitulo());
         newTarefa.setDescricao(tarefaForm.getDescricao());
         newTarefa.setPrazo(tarefaForm.getPrazo());
@@ -45,9 +52,11 @@ public class TarefaGitlabService extends TarefaServiceAbs {
         RepositoryModel repo = gitService.getRepository(accessToken, repoName);
         newTarefa.setId_criador((int) loggedUser.getId());
         newTarefa.setId_projeto((int) repo.getId());
-        newTarefa.setSupervisorResponsavel(tarefaForm.getSupervisorResponsavel());
-        newTarefa.setPrioridade(tarefaForm.getPrioridade());
-        newTarefa.setTempoEstimado(tarefaForm.getTempoEstimado());
+        newTarefa.setConhecimentos(tarefaForm.getConhecimentos());
+        newTarefa.setReferencias(tarefaForm.getReferencias());
+
+        // newTarefa.setConhecimentos("SQL, Spring");
+        // newTarefa.setReferencias("Livro bem legal");
 
         return newTarefa;
     }

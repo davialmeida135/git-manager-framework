@@ -38,7 +38,7 @@ GitService gitService;
     ProjetoService projetoService;
 
     @Autowired
-    @Qualifier("TarefaGitlabService")
+    @Qualifier("TarefaTipoBService")
     TarefaServiceAbs tarefaService;
 
     @Autowired

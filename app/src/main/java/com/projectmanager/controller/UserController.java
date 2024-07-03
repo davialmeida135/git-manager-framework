@@ -47,7 +47,7 @@ public class UserController {
     ProjetoService projetoService;
 
     @Autowired
-    @Qualifier("TarefaGitlabService")
+    @Qualifier("TarefaTipoBService")
     TarefaServiceAbs tarefaService;
 
     @GetMapping("/user/{user_id}")

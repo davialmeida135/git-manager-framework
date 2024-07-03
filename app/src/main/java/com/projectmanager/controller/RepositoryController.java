@@ -44,7 +44,7 @@ public class RepositoryController {
 
     @Autowired
     @Qualifier(Global.gitClass)
-GitService gitService; // Injete o serviço que obtém os repositórios do GitHub
+    GitService gitService; // Injete o serviço que obtém os repositórios do GitHub
 
     @Autowired
     private OAuth2AuthorizedClientService oauth2AuthorizedClientService;
@@ -52,7 +52,7 @@ GitService gitService; // Injete o serviço que obtém os repositórios do GitHu
     @Autowired
     ProjetoService projetoService;
     @Autowired
-    @Qualifier("TarefaGitlabService")
+    @Qualifier("TarefaTipoBService")
     TarefaServiceAbs tarefaService;
     @Autowired
     CronogramaService cronogramaService;

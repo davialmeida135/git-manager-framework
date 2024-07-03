@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -25,12 +24,12 @@ import com.projectmanager.repositories.ProjetoRepository;
 public class ProjetoServiceImpl implements ProjetoService {
     @Autowired
     @Qualifier(Global.gitClass)
-GitService gitService; // Injete o serviço que obtém os repositórios do GitHub
+    GitService gitService; // Injete o serviço que obtém os repositórios do GitHub
 
     @Autowired
     ProjetoRepository projetoRepository;
     @Autowired
-    @Qualifier("TarefaGitlabService")
+    @Qualifier("TarefaTipoBService")
     TarefaServiceAbs tarefaService;
     @Autowired
     CronogramaService cronogramaService;
@@ -58,9 +57,8 @@ GitService gitService; // Injete o serviço que obtém os repositórios do GitHu
             projeto.setNome(repo.getName());
             projeto.setDescricao(repo.getDescription());
             projeto.setData_inicio(repo.getCreatedAt().toString());
-            
 
-            gitService.saveIssuesAsTarefas(accessToken,repoName, tarefaService);
+            gitService.saveIssuesAsTarefas(accessToken, repoName, tarefaService);
 
             return projetoRepository.save(projeto);
 
@@ -102,7 +100,8 @@ GitService gitService; // Injete o serviço que obtém os repositórios do GitHu
 
         for (Projeto projeto : orderedProjects) {
             try {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);                
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy",
+                        Locale.ENGLISH);
                 LocalDateTime dataInicio = LocalDateTime.parse(projeto.getData_inicio(), formatter);
                 projeto.setDataInicioDate(dataInicio);
             } catch (DateTimeParseException e) {
@@ -125,9 +124,10 @@ GitService gitService; // Injete o serviço que obtém os repositórios do GitHu
 
         return top3Projects;
     }
+
     ////
     public Collection<RepositoryModel> getMatchingProjects(String accessToken) throws IOException {
-          
+
         List<RepositoryModel> projects = new ArrayList<>();
         List<RepositoryModel> repositories = gitService.getRepositories(accessToken);
         for (Projeto projeto : findAll()) {

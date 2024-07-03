@@ -10,45 +10,45 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.projectmanager.entities.Tarefa;
-import com.projectmanager.entities.TarefaGitlab;
+import com.projectmanager.entities.TarefaTipoB;
 
 @Service("PrioritySortingStrategy")
 public class PrioritySortingStrategy implements TaskSortingStrategy {
 
     @Override
     public List<Tarefa> sort(List<Tarefa> tasks) {
-        List<TarefaGitlab> gitlabTasks = sortByPrioridade(tarefaToTarefaGitlab(tasks));
-        tasks = tarefaGitlabToTarefa(gitlabTasks);
+        List<TarefaTipoB> typeB_tasks = sortByPrioridade(tarefaToTarefaTipoB(tasks));
+        tasks = tarefaTipoBToTarefa(typeB_tasks);
 
         return tasks;
     }
 
-    private List<TarefaGitlab> tarefaToTarefaGitlab(List<Tarefa> tasks) {
-        List<TarefaGitlab> gitlabTasks = tasks.stream()
-                .map(tarefa -> (TarefaGitlab) tarefa) // Faz o casting de Tarefa para TarefaGitlab
+    private List<TarefaTipoB> tarefaToTarefaTipoB(List<Tarefa> tasks) {
+        List<TarefaTipoB> typeB_tasks = tasks.stream()
+                .map(tarefa -> (TarefaTipoB) tarefa)
                 .collect(Collectors.toList());
 
-        return gitlabTasks;
+        return typeB_tasks;
     }
 
-    private List<Tarefa> tarefaGitlabToTarefa(List<TarefaGitlab> gitlabTasks) {
-        return gitlabTasks.stream()
-                .map(tarefaGitlab -> (Tarefa) tarefaGitlab) // Faz o casting de TarefaGitlab para Tarefa
+    private List<Tarefa> tarefaTipoBToTarefa(List<TarefaTipoB> typeB_tasks) {
+        return typeB_tasks.stream()
+                .map(typeB_task -> (Tarefa) typeB_task)
                 .collect(Collectors.toList());
     }
 
-    private List<TarefaGitlab> sortByPrioridade(List<TarefaGitlab> tasks) {
+    private List<TarefaTipoB> sortByPrioridade(List<TarefaTipoB> tasks) {
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        Function<TarefaGitlab, LocalDate> prazoConverter = t -> LocalDate.parse(t.getPrazo(), formatter);
+        Function<TarefaTipoB, LocalDate> prazoConverter = t -> LocalDate.parse(t.getPrazo(), formatter);
 
-        Comparator<TarefaGitlab> comparator = Comparator
+        Comparator<TarefaTipoB> comparator = Comparator
                 .comparing(prazoConverter)
-                .thenComparing(Comparator.comparingInt(TarefaGitlab::getPrioridadeValor).reversed());
+                .thenComparing(Comparator.comparingInt(TarefaTipoB::getPrioridadeValor).reversed());
 
         // Filtra e ordena a lista
-        List<TarefaGitlab> sortedTasks = tasks.stream()
+        List<TarefaTipoB> sortedTasks = tasks.stream()
                 .filter(s -> LocalDate.parse(s.getPrazo(), formatter).compareTo(today) >= 0) // Filtra tarefas com
                                                                                              // prazos hoje ou no futuro
                 .sorted(comparator)
