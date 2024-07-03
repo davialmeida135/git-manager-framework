@@ -1,6 +1,6 @@
 # project-manager
 
-Projeto voltado para o gerenciamento eficiente de projetos de desenvolvimento de software, integrando-se à API do GitHub para uma experiência mais integrada.
+Projeto voltado para o gerenciamento eficiente de projetos de desenvolvimento de software, integrando-se à API do Git para uma experiência mais integrada.
 
 ## Tabela de Conteúdos
 

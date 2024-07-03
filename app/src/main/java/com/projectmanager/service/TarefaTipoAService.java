@@ -10,16 +10,16 @@ import org.springframework.stereotype.Service;
 
 import com.projectmanager.config.Global;
 import com.projectmanager.entities.Tarefa;
-import com.projectmanager.entities.TarefaGitHub;
+import com.projectmanager.entities.TarefaTipoA;
 import com.projectmanager.exceptions.BusinessException;
 import com.projectmanager.forms.TarefaForm;
 import com.projectmanager.model.RepositoryModel;
 import com.projectmanager.model.UsuarioModel;
 
-@Service("TarefaService")
-public class TarefaGithubService extends TarefaServiceAbs {
+@Service("TarefaTipoAService")
+public class TarefaTipoAService extends TarefaServiceAbs {
     @Autowired
-    @Qualifier(Global.GitClass)
+    @Qualifier(Global.gitClass)
     private GitService gitService;
 
     @Override
@@ -35,17 +35,18 @@ public class TarefaGithubService extends TarefaServiceAbs {
 
     @Override
     public Tarefa instantiateTarefa() {
-        Tarefa newTarefa = new TarefaGitHub();
+        Tarefa newTarefa = new TarefaTipoA();
         return newTarefa;
     }
 
     @Override
     public Tarefa formToTarefa(TarefaForm tarefaForm, String repoName, String accessToken)
             throws BusinessException, IOException {
-        TarefaGitHub newTarefa = new TarefaGitHub();
+        TarefaTipoA newTarefa = new TarefaTipoA();
         newTarefa.setTitulo(tarefaForm.getTitulo());
         newTarefa.setDescricao(tarefaForm.getDescricao());
         newTarefa.setPrazo(tarefaForm.getPrazo());
+        newTarefa.setData_criacao();
 
         UsuarioModel loggedUser = gitService.getUsuarioModel(accessToken); // Objeto do usuario
         gitService.validateUser(loggedUser, String.valueOf(loggedUser.getId()));

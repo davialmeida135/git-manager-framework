@@ -17,17 +17,16 @@ public class SpringSecurityConfig {
         http.csrf().disable().authorizeRequests()
                 .requestMatchers("/home/**", "/repository/**", "/authenticated/**", "/user/**", "/projects/**",
                         "/user/**",
-                        "/repositories/**") // Paginas que precisam
-                // de autenticação
+                        "/repositories/**") //Paginas que precisam de autenticação
                 .authenticated()
-                .requestMatchers("/**").permitAll() // Paginas que não precisam de autenticação
+                .requestMatchers("/**").permitAll() //Paginas que não precisam de autenticação
                 .and()
                 .oauth2Login()
                 .and()
                 .logout()
-                .logoutUrl("/logout") // URL personalizada para o logout
+                .logoutUrl("/logout") //URL personalizada para o logout
                 .logoutSuccessHandler((request, response, authentication) -> {
-                    // Limpa qualquer contexto de segurança existente
+                    //Limpa qualquer contexto de segurança existente
                     SecurityContextHolder.clearContext();
                     request.getSession().removeAttribute("user_id");
                     response.sendRedirect("/");

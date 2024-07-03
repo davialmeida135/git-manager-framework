@@ -21,8 +21,14 @@ public class TarefaForm {
     private List<String> collaborators;
 
     private String conhecimentos;
-    
+
     private String referencias;
+
+    private String supervisorResponsavel;
+
+    private String tempoEstimado;
+    
+    private String prioridade;
 
     // getters and setters for all fields
 }

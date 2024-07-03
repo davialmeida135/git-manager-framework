@@ -14,15 +14,15 @@ import com.projectmanager.config.Global;
 import com.projectmanager.entities.Usuario;
 import com.projectmanager.model.UsuarioModel;
 import com.projectmanager.service.GitService;
-
+import com.projectmanager.service.GitlabService;
 import com.projectmanager.service.UsuarioService;
 
 @Controller
 public class HomeController {
 
     @Autowired
-    @Qualifier(Global.GitClass)
-    private GitService gitService; // Injete o serviço que obtém os repositórios do GitHub
+    @Qualifier(Global.gitClass)
+GitService gitService; // Injete o serviço que obtém os repositórios do Git
 
     @Autowired
     private OAuth2AuthorizedClientService oauth2AuthorizedClientService; // Injete o serviço de cliente autorizado
@@ -108,7 +108,7 @@ public class HomeController {
 
     private String processAuthenticatedUser(Model model, OAuth2AuthenticationToken authenticationToken) {
         if (!gitService.isAuthenticated(authenticationToken)) {
-            // Usuário não autenticado, faça o que for necessário (por exemplo, redirecionar para página de login)
+            // Usuário não autenticado
             return "redirect:/";
         }
         String accessToken = gitService.getAccessToken(authenticationToken, oauth2AuthorizedClientService);
@@ -120,6 +120,7 @@ public class HomeController {
         } catch (IOException e) {
             model.addAttribute("errorMessage", "Erro ao processar usuário autenticado: " + e.getMessage());
             model.addAttribute("errorDetails", "Detalhes técnicos: " + e.toString());
+            System.out.println(e.getMessage());
             return "error";
         }
     }

@@ -23,7 +23,6 @@ public class RepositoryModel {
     public RepositoryModel() {
         
     }
-    
 
     public RepositoryModel(long id, String owner, String name, String description, String url, String language,
             Set<String> branches, Set<Usuario> collaborators, String createdAt, Set<IssueModel> issues) {
@@ -34,17 +33,6 @@ public class RepositoryModel {
         this.url = url;
         this.language = language;
         this.branches = branches;
-       
         this.createdAt = createdAt; 
-    
     }
-/* 
-    public void addCollaborator(Usuario collaborator) {
-        this.collaborators.add(collaborator);
-    }
-
-    public void addIssue(IssueModel issue) {
-        this.issues.add(issue);
-    }
-*/
 }

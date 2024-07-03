@@ -21,7 +21,8 @@ public class FeedbackServiceImpl implements FeedbackService{
     @Autowired
     FeedbackRepository feedbackRepository;
     @Autowired
-    private GitService gitService; // Injete o serviço que obtém os repositórios do GitHub
+    private @Qualifier("GitlabService")
+GitService gitService; // Injete o serviço que obtém os repositórios do GitHub
 
     @Override
     public Iterable<Feedback> findAll() {

@@ -37,4 +37,8 @@ public class Usuario {
         this.name = name;
     }
 
+    @Override
+    public String toString() {
+        return "Usuario [id=" + id + ", name=" + name + ", username=" + username + "]";
+    }
 }

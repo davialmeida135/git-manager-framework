@@ -34,7 +34,7 @@ import com.projectmanager.model.UsuarioModel;
 import com.projectmanager.service.ColaboradorService;
 import com.projectmanager.service.CronogramaService;
 import com.projectmanager.service.GitService;
-
+import com.projectmanager.service.GitlabService;
 import com.projectmanager.service.ProjetoService;
 import com.projectmanager.service.TarefaServiceAbs;
 
@@ -43,8 +43,8 @@ import com.projectmanager.service.TarefaServiceAbs;
 public class RepositoryController {
 
     @Autowired
-    @Qualifier(Global.GitClass)
-    private GitService gitService; // Injete o serviço que obtém os repositórios do GitHub
+    @Qualifier(Global.gitClass)
+    GitService gitService; // Injete o serviço que obtém os repositórios do Git
 
     @Autowired
     private OAuth2AuthorizedClientService oauth2AuthorizedClientService;
@@ -52,6 +52,7 @@ public class RepositoryController {
     @Autowired
     ProjetoService projetoService;
     @Autowired
+    @Qualifier("TarefaTipoBService")
     TarefaServiceAbs tarefaService;
     @Autowired
     CronogramaService cronogramaService;
@@ -63,7 +64,7 @@ public class RepositoryController {
             OAuth2AuthenticationToken authenticationToken, Model model) {
         String accessToken = gitService.getAccessToken(authenticationToken, oauth2AuthorizedClientService);
 
-        // Obter todos os repositórios do usuário no GitHub
+        // Obter todos os repositórios do usuário no Git
         try {
             UsuarioModel loggedUser = gitService.getUsuarioModel(accessToken);
 

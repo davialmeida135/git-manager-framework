@@ -51,14 +51,45 @@
       background-color: rgba(255, 0, 0, 0.8); /* Cor de fundo mais intensa ao passar o mouse */
     }
   </style>
+  <style>
+    .icon {
+        width: 24px;
+        height: 24px;
+    }
+
+    .low-priority {
+        fill: #8cd47e;
+    }
+
+    .medium-priority {
+        fill: #f8d66d;
+    }
+
+    .high-priority {
+        fill: #ff6961;
+    }
+
+    .form-check-input {
+        border-color: #8cd47e;
+        height: 20px;
+        width: 20px;
+    }
+
+    /* Estilo para o ícone do checkbox quando marcado */
+    .form-check-input:checked {
+        background-color: #8cd47e;
+        border-color: #8cd47e;
+        height: 20px;
+        width: 20px;
+    }
+</style>
 </head>
 
 <body>
 
-  <header th:fragment="header_fragments(activePage, user_id)" class="mb-auto mt-0">
-    <div>
-      <h3 class="float-md-start mb-0">Project Manager</h3>
-      <nav class="nav nav-masthead justify-content-center float-md-end">
+  <header th:fragment="header_fragments(activePage, user_id)" class="mb-auto mt-0 d-flex justify-content-between align-items-center">
+    <h3 class="mb-0">Project Manager</h3>
+    <nav class="nav nav-masthead">
         <a class="nav-link fw-bold py-1 px-3" th:classappend="${#strings.equals(activePage,'Home')} ? 'active' : ''"
           href="/">Home</a>
         <!-- Lógica para usuário logado -->
@@ -74,9 +105,9 @@
         <th:block th:if="${user_id != null}">
           <a class="nav-link fw-bold py-1 px-3 nav-link-logout" href="/logout">Sair</a>
         </th:block>
-      </nav>
-    </div>
-  </header>
+    </nav>
+</header>
+
 
   <!-- Fragmento para incluir jQuery -->
   <script th:fragment="jquery-script" src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

@@ -19,7 +19,7 @@ import com.projectmanager.config.Global;
 import com.projectmanager.model.RepositoryModel;
 import com.projectmanager.service.ColaboradorService;
 import com.projectmanager.service.GitService;
-
+import com.projectmanager.service.GitlabService;
 import com.projectmanager.service.ProjetoService;
 import com.projectmanager.service.TarefaServiceAbs;
 
@@ -28,8 +28,8 @@ import com.projectmanager.service.TarefaServiceAbs;
 public class ProjectController {
 
     @Autowired
-    @Qualifier(Global.GitClass)
-    private GitService gitService;
+    @Qualifier(Global.gitClass)
+GitService gitService;
 
     @Autowired
     OAuth2AuthorizedClientService oauth2AuthorizedClientService;
@@ -38,6 +38,7 @@ public class ProjectController {
     ProjetoService projetoService;
 
     @Autowired
+    @Qualifier("TarefaTipoBService")
     TarefaServiceAbs tarefaService;
 
     @Autowired

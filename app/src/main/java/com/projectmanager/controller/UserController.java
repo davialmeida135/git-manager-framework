@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,15 +25,16 @@ import com.projectmanager.entities.Tarefa;
 import com.projectmanager.model.RepositoryModel;
 import com.projectmanager.service.ColaboradorService;
 import com.projectmanager.service.GitService;
-
+import com.projectmanager.service.GitlabService;
 import com.projectmanager.service.ProjetoService;
 import com.projectmanager.service.TarefaServiceAbs;
+import com.projectmanager.service.TaskSortingStrategy;
 
 @Controller
 public class UserController {
 
     @Autowired
-    @Qualifier(Global.GitClass)
+    @Qualifier("GitlabService")
     private GitService gitService; // Injete o serviço que obtém os repositórios do GitHub
 
     @Autowired
@@ -45,6 +47,7 @@ public class UserController {
     ProjetoService projetoService;
 
     @Autowired
+    @Qualifier("TarefaTipoBService")
     TarefaServiceAbs tarefaService;
 
     @GetMapping("/user/{user_id}")
@@ -60,9 +63,11 @@ public class UserController {
             List<Tarefa> tasks = new ArrayList<>();
             tasks_list_byUser.forEach(tasks::add);
 
+            // System.out.println("Tarefas antes de ordenação:");
+            // tasks.forEach(System.out::println);
             tasks = colaboradorService.sortTasks(tasks);
 
-            Map<Tarefa, Projeto> tarefaProjetoMap = new HashMap<>();
+            Map<Tarefa, Projeto> tarefaProjetoMap = new LinkedHashMap<>();
             for (Tarefa tarefa : tasks) {
                 Projeto projeto = projetoService.find(tarefa.getId_projeto());
                 tarefaProjetoMap.put(tarefa, projeto);

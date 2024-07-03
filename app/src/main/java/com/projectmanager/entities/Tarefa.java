@@ -1,5 +1,8 @@
 package com.projectmanager.entities;
 import jakarta.persistence.*;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -53,8 +56,10 @@ public class Tarefa extends ScheduledActivity{
         return this.data_criacao;
     }
 
-    public void setData_criacao(String data_criacao) {
-        this.data_criacao = data_criacao;
+    public void setData_criacao() {
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        this.data_criacao = currentDate.format(formatter);
     }
 
     public Boolean getCompleta() {
@@ -75,6 +80,11 @@ public class Tarefa extends ScheduledActivity{
 
     @Override
     public boolean isGithubTarefa() {
+        return false;
+    }
+
+    @Override
+    public boolean isGitlabTarefa() {
         return false;
     }
 }

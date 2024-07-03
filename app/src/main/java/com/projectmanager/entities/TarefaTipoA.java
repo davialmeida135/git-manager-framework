@@ -5,7 +5,7 @@ import jakarta.persistence.Entity;
 
 @Entity
 @DiscriminatorValue("GITHUB_TASK")
-public class TarefaGitHub extends Tarefa{
+public class TarefaTipoA extends Tarefa{
     String conhecimentos;
     
     String referencias;
@@ -26,5 +26,10 @@ public class TarefaGitHub extends Tarefa{
     @Override
     public boolean isGithubTarefa() {
         return true;
+    }
+
+    @Override
+    public boolean isGitlabTarefa() {
+        return false;
     }
 }

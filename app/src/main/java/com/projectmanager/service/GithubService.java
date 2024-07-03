@@ -13,6 +13,7 @@ import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHUser;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
@@ -27,8 +28,8 @@ import com.projectmanager.model.RepositoryModel;
 import com.projectmanager.model.UsuarioModel;
 import com.projectmanager.config.Global;
 
-@Service(Global.GitClass)
-public class GithubService2 implements GitService {
+@Service("GithubService")
+public class GithubService implements GitService {
 
     GHMyself getGhMyself(String accessToken) throws IOException {
         GitHub github = new GitHubBuilder().withOAuthToken(accessToken).build();

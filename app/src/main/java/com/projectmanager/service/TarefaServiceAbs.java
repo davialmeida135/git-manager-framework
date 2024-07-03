@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.PermissionDeniedDataAccessException;
@@ -29,8 +28,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-public abstract class TarefaServiceAbs{
-
+public abstract class TarefaServiceAbs {
     @Autowired
     TarefaRepository tarefaRepository;
 
@@ -41,43 +39,44 @@ public abstract class TarefaServiceAbs{
     @Autowired
     CronogramaService cronogramaService;
     @Autowired
-    @Qualifier(Global.GitClass)
-    private GitService gitService;
+    @Qualifier(Global.gitClass)
+    GitService gitService;
 
     public abstract Tarefa validateCustomTarefa(Tarefa tarefa) throws BusinessException;
-    
+
     public abstract Tarefa instantiateTarefa();
 
     public abstract Tarefa formToTarefa(TarefaForm tarefaForm, String repoName, String accessToken)
-    throws BusinessException, IOException;
-    
+            throws BusinessException, IOException;
+
     public Iterable<? extends Tarefa> findAll() {
         return tarefaRepository.findAll();
     }
- 
-    public Tarefa find(int id) throws NoSuchElementException{
+
+    public Tarefa find(int id) throws NoSuchElementException {
         return tarefaRepository.findById(id).get();
     }
 
-    public Tarefa save(TarefaForm tarefaForm, String repoName, String accessToken, String user_id) 
-    throws IOException,BusinessException,DateTimeParseException,PermissionDeniedDataAccessException {
-        
+    public Tarefa save(TarefaForm tarefaForm, String repoName, String accessToken, String user_id)
+            throws IOException, BusinessException, DateTimeParseException, PermissionDeniedDataAccessException {
+
         Colaborador colaborador = new Colaborador();
         Tarefa newTarefa = formToTarefa(tarefaForm, repoName, accessToken);
         validate(newTarefa);
-        newTarefa = tarefaRepository.save( newTarefa);
+        newTarefa = tarefaRepository.save(newTarefa);
         colaborador.setTarefa_id(newTarefa.getId());
         for (Usuario user : gitService.getRepositoryCollaborators(accessToken, repoName)) {
-            if(tarefaForm.getCollaborators().contains(user.getUsername())){
+            if (tarefaForm.getCollaborators().contains(user.getUsername())) {
                 colaborador.setUsuario_id((int) user.getId());
                 colaboradorService.save(colaborador);
-            };
+            }
+            ;
         }
-                
+
         return newTarefa;
-    }    
-    
-    public Tarefa save(IssueModel issue, int repoId){
+    }
+
+    public Tarefa save(IssueModel issue, int repoId) {
         Tarefa newTarefa = instantiateTarefa();
         newTarefa.setTitulo(issue.getTitulo());
         newTarefa.setDescricao(issue.getDescricao());
@@ -87,32 +86,30 @@ public abstract class TarefaServiceAbs{
         newTarefa.setPrazo(issue.getPrazo());
 
         tarefaRepository.save(newTarefa);
-    
+
         return newTarefa;
     }
 
-    
     public void delete(int id) {
         colaboradorService.deleteColaboradoresTarefa(id);
         comentarioService.deleteComentariosTarefa(id);
         tarefaRepository.deleteById(id);
     }
 
-    
     public Collection<Tarefa> getTaskByProject(int projetoid) {
         ArrayList<Tarefa> tarefas = new ArrayList<>();
-        
-        for(Tarefa tarefa : findAll()){
-			if(tarefa.getId_projeto() == projetoid){
+
+        for (Tarefa tarefa : findAll()) {
+            if (tarefa.getId_projeto() == projetoid) {
                 tarefas.add(tarefa);
             }
-		}
+        }
 
         return tarefas;
     }
 
-    
-    public Tarefa edit(TarefaForm tarefaForm, int tarefaId, String repoName, String accessToken) throws BusinessException, IOException {
+    public Tarefa edit(TarefaForm tarefaForm, int tarefaId, String repoName, String accessToken)
+            throws BusinessException, IOException {
         colaboradorService.deleteColaboradoresTarefa(tarefaId);
         tarefaRepository.deleteById(tarefaId);
 
@@ -121,15 +118,16 @@ public abstract class TarefaServiceAbs{
         tarefa = tarefaRepository.save(tarefa);
 
         Colaborador colaborador = new Colaborador();
-        
+
         colaborador.setTarefa_id(tarefa.getId());
-           
+
         try {
             for (Usuario user : gitService.getRepositoryCollaborators(accessToken, repoName)) {
-                if(tarefaForm.getCollaborators().contains(user.getUsername())){
+                if (tarefaForm.getCollaborators().contains(user.getUsername())) {
                     colaborador.setUsuario_id((int) user.getId());
                     colaboradorService.save(colaborador);
-                };
+                }
+                ;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -137,7 +135,6 @@ public abstract class TarefaServiceAbs{
         return tarefa;
     }
 
-    
     public TarefaForm getFormTarefa(int id) {
         Tarefa tarefa = find(id);
 
@@ -168,14 +165,26 @@ public abstract class TarefaServiceAbs{
         return tarefa;
     }
 
-    public Tarefa validateBaseTarefa(Tarefa tarefa)throws BusinessException{
-        if(tarefa.getTitulo() == null || tarefa.getTitulo().isEmpty()){
+    public Tarefa validateBaseTarefa(Tarefa tarefa) throws BusinessException {
+        if (tarefa.getTitulo() == null || tarefa.getTitulo().isEmpty()) {
             throw new BusinessException("O título da tarefa não pode ser vazio.");
         }
-        if(tarefa.getTitulo().length() < 4){
+        if (tarefa.getTitulo().length() < 4) {
             throw new BusinessException("O título da tarefa deve ter pelo menos 4 caracteres.");
         }
 
         return tarefa;
+    }
+
+    public void completarTarefa(int id){
+        Tarefa tarefa = find(id);
+        tarefa.setCompleta(true);
+        tarefaRepository.save(tarefa);
+    }
+
+    public void desmarcarTarefa(int id){
+        Tarefa tarefa = find(id);
+        tarefa.setCompleta(false);
+        tarefaRepository.save(tarefa);
     }
 }
