@@ -5,28 +5,26 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
-//import org.springframework.security.web.servlet.SecurityFilterChain;
 
 @Configuration
 public class SpringSecurityConfig {
 
-    @SuppressWarnings({ "removal", "deprecation" })
+    @SuppressWarnings({ "removal"})
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http.csrf().disable().authorizeRequests()
+        http.cors().disable().csrf().disable().authorizeHttpRequests()
                 .requestMatchers("/home/**", "/repository/**", "/authenticated/**", "/user/**", "/projects/**",
-                        "/user/**",
-                        "/repositories/**") //Paginas que precisam de autenticação
+                        "/repositories/**") // Pages that require authentication
                 .authenticated()
-                .requestMatchers("/**").permitAll() //Paginas que não precisam de autenticação
+                .requestMatchers("/**").permitAll() // Pages that do not require authentication
                 .and()
                 .oauth2Login()
                 .and()
                 .logout()
-                .logoutUrl("/logout") //URL personalizada para o logout
+                .logoutUrl("/logout") // Custom logout URL
                 .logoutSuccessHandler((request, response, authentication) -> {
-                    //Limpa qualquer contexto de segurança existente
+                    // Clear any existing security context
                     SecurityContextHolder.clearContext();
                     request.getSession().removeAttribute("user_id");
                     response.sendRedirect("/");
@@ -36,6 +34,7 @@ public class SpringSecurityConfig {
                 .and()
                 .exceptionHandling()
                 .accessDeniedPage("/accessDenied");
+
         return http.build();
     }
 }
