@@ -1,14 +1,8 @@
 package com.projectmanager.controller;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,7 +20,6 @@ import org.springframework.ui.Model; // Importe a classe Model
 import com.projectmanager.config.Global;
 import com.projectmanager.entities.Cronograma;
 import com.projectmanager.entities.ScheduledActivity;
-import com.projectmanager.entities.Tarefa;
 import com.projectmanager.entities.Usuario;
 import com.projectmanager.exceptions.BusinessException;
 import com.projectmanager.model.RepositoryModel;
@@ -118,28 +111,16 @@ public class RepositoryController {
     public String getRepositoryCronograma(@PathVariable("user_id") String user_id,
             @PathVariable("repo_name") String repoName,
             OAuth2AuthenticationToken authenticationToken, Model model) {
-        String accessToken = gitService.getAccessToken(authenticationToken, oauth2AuthorizedClientService);
-
         try {
+            String accessToken = gitService.getAccessToken(authenticationToken, oauth2AuthorizedClientService);
+
             UsuarioModel loggedUser = gitService.getUsuarioModel(accessToken); // Objeto do usuario
             gitService.validateUser(loggedUser, user_id);
             RepositoryModel repo = gitService.getRepository(accessToken, repoName);
 
-            // Criação de um cronograma para o projeto
-            Collection<Cronograma> cronogramas = cronogramaService.getCronogramasProjeto((int) repo.getId());
-            Collection<Tarefa> tarefas = tarefaService.getTaskByProject((int) repo.getId());
+            Collection<ScheduledActivity> schedule = cronogramaService.buildScheduleForRepository((int) repo.getId(), tarefaService);
 
-            Collection<ScheduledActivity> schedule = new ArrayList<ScheduledActivity>();
-            schedule.addAll(cronogramas);
-            schedule.addAll(tarefas);
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-            List<ScheduledActivity> sortedSchedule = schedule.stream()
-                    .sorted(Comparator.comparing(s -> LocalDate.parse(s.getPrazo(), formatter)))
-                    .collect(Collectors.toList());
-            // TODO levar criação do cronograma para o service
-
-            model.addAttribute("schedule", sortedSchedule);
+            model.addAttribute("schedule", schedule);
             model.addAttribute("repository", repo);
             model.addAttribute("user", user_id);
 

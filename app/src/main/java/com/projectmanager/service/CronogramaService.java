@@ -3,6 +3,7 @@ package com.projectmanager.service;
 import java.util.Collection;
 
 import com.projectmanager.entities.Cronograma;
+import com.projectmanager.entities.ScheduledActivity;
 
 
 public interface CronogramaService {
@@ -12,4 +13,5 @@ public interface CronogramaService {
     public void delete(int id);
     public void deleteCronogramasProjeto(int idProjeto);
     public Collection<Cronograma> getCronogramasProjeto(int idProjeto);
+    public Collection<ScheduledActivity> buildScheduleForRepository(int repositoryId, TarefaServiceAbs tarefaService);
 }
