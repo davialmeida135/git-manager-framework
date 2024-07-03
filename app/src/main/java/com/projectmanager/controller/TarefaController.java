@@ -223,7 +223,7 @@ public class TarefaController {
         int tarefaId = Integer.parseInt(tarefaIdStr);
         tarefaService.completarTarefa(tarefaId);
 
-        return "redirect:/user/" + user_id + "/repositories/" + repoName + "/tasks";
+        return "redirect:/user/" + user_id + "/repositories/" + repoName + "/tasks/" + tarefaIdStr;
     }
 
     @PostMapping("/{tarefa_id}/undoComplete")
@@ -234,7 +234,7 @@ public class TarefaController {
         int tarefaId = Integer.parseInt(tarefaIdStr);
         tarefaService.desmarcarTarefa(tarefaId);
 
-        return "redirect:/user/" + user_id + "/repositories/" + repoName + "/tasks";
+        return "redirect:/user/" + user_id + "/repositories/" + repoName + "/tasks/" + tarefaIdStr;
     }
 
 }
