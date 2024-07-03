@@ -55,10 +55,10 @@
                     </div>
 
                     <a th:if="${!entry.key.completa}" href="@{'/user/' + ${user} + '/repositories/' + ${entry.value.nome} + '/tasks/' + ${entry.key.id} + '/complete'}"
-                        class="btn btn-primary stretched-link d-block mx-auto mt-2" th:attr="onclick='event.preventDefault(); 
+                        class="btn btn-primary stretched-link d-block mx-auto mt-2 text-truncate" th:attr="onclick='event.preventDefault(); 
                     var form = document.getElementById(\'form-finalizar-' + ${entry.key.id} + '\');
                     form.submit();
-                    setTimeout(function() { window.history.back(); }, 100);'" style="z-index: 2; position: relative;">Finalizar</a>
+                    setTimeout(function() { window.history.back(); }, 100);'" style="z-index: 2; position: relative; width: 90px; max-width: 90%;">Finalizar</a>
 
                     <!-- <button type="button" class="btn btn-primary me-3" data-bs-toggle="modal"
                         data-bs-target="#modalEditTask">
