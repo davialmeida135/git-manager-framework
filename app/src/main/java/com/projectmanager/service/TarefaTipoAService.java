@@ -46,6 +46,7 @@ public class TarefaTipoAService extends TarefaServiceAbs {
         newTarefa.setTitulo(tarefaForm.getTitulo());
         newTarefa.setDescricao(tarefaForm.getDescricao());
         newTarefa.setPrazo(tarefaForm.getPrazo());
+        newTarefa.setData_criacao();
 
         UsuarioModel loggedUser = gitService.getUsuarioModel(accessToken); // Objeto do usuario
         gitService.validateUser(loggedUser, String.valueOf(loggedUser.getId()));
