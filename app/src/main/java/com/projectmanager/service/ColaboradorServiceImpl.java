@@ -86,7 +86,7 @@ public class ColaboradorServiceImpl implements ColaboradorService {
         Iterable<Tarefa> iterable = findTasksByIDUser(projectId, tarefaService); // Assuming this returns an Iterable<Tarefa>
         List<Tarefa> tasks = new ArrayList<>();
         iterable.forEach(tasks::add);
-        setSortingStrategy(new SortByGithubStrategy());
+        setSortingStrategy(new SortByGitHubStrategy());
         tasks = sortTasks(tasks); // Usar a estratégia de ordenação injetada
         return tasks;
     }

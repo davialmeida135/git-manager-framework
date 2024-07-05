@@ -14,7 +14,7 @@ import com.projectmanager.entities.ScheduledActivity;
 import com.projectmanager.entities.Tarefa;
 
 @Service("SortingStrategy")
-public class SortByGithubStrategy implements TaskSortingStrategy {
+public class SortByGitHubStrategy implements TaskSortingStrategy {
 
     @Override
     public List<Tarefa> sort(List<Tarefa> tasks) {

@@ -36,5 +36,8 @@ public class Cronograma extends ScheduledActivity{
     public boolean isGithubTarefa() {
         return false;
     }
-
+    @Override
+    public boolean isGitlabTarefa() {
+        return false;
+    }
 }
