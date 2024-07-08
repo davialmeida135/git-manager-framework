@@ -261,10 +261,11 @@ public class GitlabService implements GitService {
             String authToken = gitLabApi.getAuthToken();
             if (authToken != null && !authToken.isEmpty()) {
                 List<Project> gitLabProjects = gitLabApi.getProjectApi().getOwnedProjects();
+                System.out.println("Projetos do GitLab: " + gitLabProjects);
 
                 Project foundRepo = null;
                 for (Project gitLabProject : gitLabProjects) {
-                    if (gitLabProject.getName().equals(repo.getName())) {
+                    if (gitLabProject.getName().equals(repo.getName().replace('-', ' '))) {
                         foundRepo = gitLabProject;
                         break;
                     }
