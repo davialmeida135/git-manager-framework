@@ -1,7 +1,7 @@
 package com.projectmanager.config;
 
 public enum GitServiceType {
-    GITHUB("GithubService"),
+    GITHUB("gitService"),
     GITLAB("GitlabService");
 
     private final String serviceName;

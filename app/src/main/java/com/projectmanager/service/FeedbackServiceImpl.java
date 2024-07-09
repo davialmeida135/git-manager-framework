@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.projectmanager.config.Global;
 import com.projectmanager.entities.Feedback;
 import com.projectmanager.entities.Usuario;
 import com.projectmanager.forms.FeedbackForm;
@@ -20,8 +21,8 @@ public class FeedbackServiceImpl implements FeedbackService{
     @Autowired
     FeedbackRepository feedbackRepository;
     @Autowired
-    private @Qualifier("GitlabService")
-GitService gitService; // Injete o serviço que obtém os repositórios do GitHub
+    private @Qualifier(Global.gitClass)
+GitService gitService; // Injete o serviço que obtém os repositórios do git
 
     @Override
     public Iterable<Feedback> findAll() {

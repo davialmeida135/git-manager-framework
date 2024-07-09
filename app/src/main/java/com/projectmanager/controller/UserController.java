@@ -29,7 +29,7 @@ public class UserController {
 
     @Autowired
     @Qualifier("GitlabService")
-    private GitService gitService; // Injete o serviço que obtém os repositórios do GitHub
+    private GitService gitService; // Injete o serviço que obtém os repositórios do git
 
     @Autowired
     private OAuth2AuthorizedClientService oauth2AuthorizedClientService;

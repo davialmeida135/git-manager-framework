@@ -77,14 +77,4 @@ public class Tarefa extends ScheduledActivity{
     public void setId_projeto(int id_projeto) {
         this.id_projeto = id_projeto;
     }
-
-    @Override
-    public boolean isGithubTarefa() {
-        return false;
-    }
-
-    @Override
-    public boolean isGitlabTarefa() {
-        return false;
-    }
 }
