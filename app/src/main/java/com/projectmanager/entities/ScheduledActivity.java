@@ -8,8 +8,6 @@ public abstract class ScheduledActivity {
     private String descricao;
     private String prazo;
 
-    public abstract boolean isGithubTarefa();
-    public abstract boolean isGitlabTarefa();
     
     public String getTitulo() {
         return titulo;
