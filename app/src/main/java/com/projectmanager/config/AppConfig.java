@@ -8,7 +8,7 @@ import com.projectmanager.service.DateSortingStrategy;
 import com.projectmanager.service.GitService;
 import com.projectmanager.service.GithubService;
 import com.projectmanager.service.GitlabService;
-import com.projectmanager.service.PrioritySortingStrategy;
+
 import com.projectmanager.service.TaskSortingStrategy;
 
 import jakarta.annotation.PostConstruct;
@@ -29,11 +29,6 @@ public class AppConfig {
     @Bean(name = "dateSortingStrategy")
     public DateSortingStrategy dateSortingStrategy() {
         return new DateSortingStrategy();
-    }
-
-    @Bean(name = "prioritySortingStrategy")
-    public PrioritySortingStrategy prioritySortingStrategy() {
-        return new PrioritySortingStrategy();
     }
 
     @Bean("GitlabService")
@@ -64,10 +59,6 @@ public class AppConfig {
     @Bean(name = "sortingStrategy")
     public TaskSortingStrategy createSortingStrategy() {
         switch (gitServiceType) {
-            case GITHUB:
-                return new DateSortingStrategy(); // Exemplo: Estratégia de ordenação por data para GitHub
-            case GITLAB:
-                return new PrioritySortingStrategy(); // Exemplo: Estratégia de ordenação por prioridade para GitLab
             default:
                 throw new IllegalStateException("Tipo de serviço Git não suportado: " + gitServiceType);
         }
